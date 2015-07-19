@@ -65,6 +65,15 @@ void zb_handle(void)
                 break;
 
             case ZIGBEE_TRANSMIT_STATUS:
+                if (decodedFrame.status != 0)
+                {
+                  led_red_ON();
+                  //led_green_OFF();
+                }
+                else
+                {
+                  //led_green_ON();
+                }
                 break;
 
             case ZIGBEE_RECEIVE_PACKET:
@@ -102,9 +111,10 @@ void zb_handle(void)
 
 #define OFFSET_SIZE         (1)
 #define OFFSET_FRAMEID      (4)
-#define OFFSET_TEMPERATURE (20)
-#define OFFSET_HUMIDITY    (23)
-#define OFFSET_VOLTAGE     (26)
+#define OFFSET_COUNTER      (18)
+#define OFFSET_TEMPERATURE (21)
+#define OFFSET_HUMIDITY    (24)
+#define OFFSET_VOLTAGE     (27)
 
 
 const uint8_t frameData[] = 
@@ -128,6 +138,7 @@ const uint8_t frameData[] =
   0x00, //option
   //payload
   SENSOR_PROTOCOL_DATA_TYPE,
+  0x00,//counter
   0x03,
   SENSOR_HYT221_TEMP,
   0x00,
@@ -141,13 +152,15 @@ const uint8_t frameData[] =
   //and checksum
 };
 
-uint8_t zb_frameToSend[35];
-uint8_t frameID = 2;
+static uint8_t zb_frameToSend[35];
+static uint8_t zb_frameID = 2;
+static uint8_t zb_counter;
 
 void zb_handle_sendData(uint16_t tempRaw, uint16_t humidityRaw)
 {
     memcpy(zb_frameToSend, frameData,  sizeof(frameData));
-    zb_frameToSend[OFFSET_FRAMEID] = frameID++;
+    zb_frameToSend[OFFSET_FRAMEID] = zb_frameID++;
+    zb_frameToSend[OFFSET_COUNTER] = zb_counter++;
     zb_frameToSend[OFFSET_TEMPERATURE]   = tempRaw>>8;
     zb_frameToSend[OFFSET_TEMPERATURE+1] = tempRaw;
     zb_frameToSend[OFFSET_HUMIDITY]   = humidityRaw>>8;

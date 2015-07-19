@@ -3,9 +3,9 @@
 #include "leds.h"
 #include "uart_loc.h"
 
-uint8_t counter = 0;
-int8_t ledState = 0;
-int8_t ledYState = 0;
+static uint8_t counter = 0;
+static int8_t ledState = 0;
+static int8_t ledYState = 0;
 
 static uint8_t UART_writeIndex = 0;
 //extern uint8_t nbCharRecu;
@@ -15,6 +15,7 @@ void interrupt high_priority isr_hi(void)
     //IT TIMER
     if (INTCONbits.TMR0IE & INTCONbits.TMR0IF)
     {
+        /*
         counter++;
         if (counter == 245)
         {
@@ -29,7 +30,7 @@ void interrupt high_priority isr_hi(void)
                 ledState = 0;
                 led_green_OFF();
             }
-        }
+        }*/
 
         //clear interrupt flags
         INTCONbits.TMR0IF = 0;
