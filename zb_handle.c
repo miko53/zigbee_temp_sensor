@@ -83,7 +83,7 @@ void zb_handle(void)
                 break;
         }
     }
-
+/*
     switch (zb_status)
     {
         case ZB_STATUS_NOT_JOINED:
@@ -100,6 +100,7 @@ void zb_handle(void)
             
             break;
     }
+*/
 }
 
 #define SENSOR_PROTOCOL_DATA_TYPE     (0x00)

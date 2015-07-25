@@ -25,6 +25,10 @@ extern "C" {
 #define led_green_ON() LATD |= LED_GREEN
 #define led_green_OFF() LATD &= ~LED_GREEN
 
+extern void leds_red_glitch(void);
+extern void leds_yellow_glitch(void);
+extern void leds_green_glitch(void);
+
 
 #ifdef	__cplusplus
 }
