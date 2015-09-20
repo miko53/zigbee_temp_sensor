@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.05" unitdist="inch" unit="inch" style="dots" multiple="1" display="yes" altdistance="0.025" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="16" name="Bottom" color="1" fill="1" visible="no" active="no"/>
@@ -16069,7 +16069,7 @@ Source: 008-0260-0_E.pdf</description>
 </class>
 </classes>
 <parts>
-<part name="FRAME1" library="frames" deviceset="DINA4_L" device="" value="XBee Temp Hyd. sensor"/>
+<part name="WIRELESS_SENSOR" library="frames" deviceset="DINA4_L" device="" value="XBee Temp Hyd. sensor"/>
 <part name="SUPPLY" library="ma_libs" deviceset="3AA" device=""/>
 <part name="UC1" library="ma_libs" deviceset="S7V8" device=""/>
 <part name="GND1" library="supply1" deviceset="GND" device=""/>
@@ -16121,10 +16121,6 @@ Source: 008-0260-0_E.pdf</description>
 <part name="R10" library="rcl" deviceset="R-EU_" device="0204/7" value="4.7k"/>
 <part name="GND14" library="supply1" deviceset="GND" device=""/>
 <part name="Q2" library="crystal" deviceset="CRYSTAL" device="TC26H" value="32.768kHz"/>
-<part name="Q3" library="crystal" deviceset="CRYSTAL" device="HC49S" value="1MHz"/>
-<part name="GND15" library="supply1" deviceset="GND" device=""/>
-<part name="C6" library="rcl" deviceset="C-EU" device="025-024X044" value="30pF"/>
-<part name="C7" library="rcl" deviceset="C-EU" device="025-024X044" value="30pF"/>
 <part name="C8" library="rcl" deviceset="C-EU" device="025-024X044" value="30pF"/>
 <part name="C9" library="rcl" deviceset="C-EU" device="025-024X044" value="30pF"/>
 <part name="GND16" library="supply1" deviceset="GND" device=""/>
@@ -16135,8 +16131,8 @@ Source: 008-0260-0_E.pdf</description>
 <text x="224.79" y="149.86" size="1.778" layer="91">Optional</text>
 </plain>
 <instances>
-<instance part="FRAME1" gate="G$1" x="0" y="0"/>
-<instance part="FRAME1" gate="G$2" x="162.56" y="0"/>
+<instance part="WIRELESS_SENSOR" gate="G$1" x="0" y="0"/>
+<instance part="WIRELESS_SENSOR" gate="G$2" x="162.56" y="0"/>
 <instance part="SUPPLY" gate="G$1" x="7.62" y="152.4" rot="R270"/>
 <instance part="UC1" gate="G$1" x="38.1" y="149.86"/>
 <instance part="GND1" gate="1" x="10.16" y="142.24"/>
@@ -16188,10 +16184,6 @@ Source: 008-0260-0_E.pdf</description>
 <instance part="R10" gate="G$1" x="246.38" y="53.34" rot="R270"/>
 <instance part="GND14" gate="1" x="246.38" y="45.72"/>
 <instance part="Q2" gate="G$1" x="242.57" y="125.73" rot="R180"/>
-<instance part="Q3" gate="G$1" x="213.36" y="146.05" rot="R180"/>
-<instance part="GND15" gate="1" x="213.36" y="135.89"/>
-<instance part="C6" gate="G$1" x="207.01" y="143.51"/>
-<instance part="C7" gate="G$1" x="219.71" y="143.51"/>
 <instance part="C8" gate="G$1" x="234.95" y="123.19"/>
 <instance part="C9" gate="G$1" x="248.92" y="123.19"/>
 <instance part="GND16" gate="1" x="242.57" y="115.57"/>
@@ -16273,14 +16265,6 @@ Source: 008-0260-0_E.pdf</description>
 <segment>
 <pinref part="R10" gate="G$1" pin="2"/>
 <pinref part="GND14" gate="1" pin="GND"/>
-</segment>
-<segment>
-<pinref part="C6" gate="G$1" pin="2"/>
-<pinref part="GND15" gate="1" pin="GND"/>
-<wire x1="207.01" y1="138.43" x2="213.36" y2="138.43" width="0.1524" layer="91"/>
-<pinref part="C7" gate="G$1" pin="2"/>
-<wire x1="219.71" y1="138.43" x2="213.36" y2="138.43" width="0.1524" layer="91"/>
-<junction x="213.36" y="138.43"/>
 </segment>
 <segment>
 <pinref part="C8" gate="G$1" pin="2"/>
@@ -16640,28 +16624,12 @@ Source: 008-0260-0_E.pdf</description>
 <wire x1="66.04" y1="106.68" x2="63.5" y2="106.68" width="0.1524" layer="91"/>
 <label x="63.5" y="106.68" size="1.016" layer="95" rot="R180" xref="yes"/>
 </segment>
-<segment>
-<pinref part="Q3" gate="G$1" pin="1"/>
-<pinref part="C7" gate="G$1" pin="1"/>
-<wire x1="215.9" y1="146.05" x2="219.71" y2="146.05" width="0.1524" layer="91"/>
-<wire x1="219.71" y1="146.05" x2="222.25" y2="146.05" width="0.1524" layer="91"/>
-<junction x="219.71" y="146.05"/>
-<label x="222.25" y="146.05" size="1.016" layer="95" xref="yes"/>
-</segment>
 </net>
 <net name="OSC1" class="0">
 <segment>
 <pinref part="UC2" gate="A" pin="OSC1/CLKI/RA7"/>
 <wire x1="66.04" y1="104.14" x2="63.5" y2="104.14" width="0.1524" layer="91"/>
 <label x="63.5" y="104.14" size="1.016" layer="95" rot="R180" xref="yes"/>
-</segment>
-<segment>
-<pinref part="C6" gate="G$1" pin="1"/>
-<pinref part="Q3" gate="G$1" pin="2"/>
-<wire x1="207.01" y1="146.05" x2="210.82" y2="146.05" width="0.1524" layer="91"/>
-<wire x1="207.01" y1="146.05" x2="204.47" y2="146.05" width="0.1524" layer="91"/>
-<junction x="207.01" y="146.05"/>
-<label x="204.47" y="146.05" size="1.016" layer="95" rot="R180" xref="yes"/>
 </segment>
 </net>
 </nets>
