@@ -16232,7 +16232,7 @@ grid 2.54 mm</description>
 <sheets>
 <sheet>
 <plain>
-<text x="224.79" y="149.86" size="1.778" layer="91">Optional</text>
+<text x="237.49" y="137.16" size="1.778" layer="91">Optional</text>
 </plain>
 <instances>
 <instance part="WIRELESS_SENSOR" gate="G$1" x="0" y="0"/>
