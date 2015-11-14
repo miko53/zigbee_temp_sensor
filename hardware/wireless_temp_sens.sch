@@ -16216,11 +16216,11 @@ grid 2.54 mm</description>
 <part name="C4" library="rcl" deviceset="C-EU" device="025-025X050" value="100nF"/>
 <part name="GND13" library="supply1" deviceset="GND" device=""/>
 <part name="Q1" library="transistor-npn" deviceset="BC550*" device="" technology="C"/>
-<part name="R7" library="rcl" deviceset="R-EU_" device="0204/7" value="2k"/>
+<part name="R7" library="rcl" deviceset="R-EU_" device="0204/7" value="10k"/>
 <part name="R8" library="rcl" deviceset="R-EU_" device="0204/7" value="100k"/>
 <part name="C5" library="rcl" deviceset="C-EU" device="025-025X050" value="100pF"/>
-<part name="R9" library="rcl" deviceset="R-EU_" device="0204/7" value="10k"/>
-<part name="R10" library="rcl" deviceset="R-EU_" device="0204/7" value="4.7k"/>
+<part name="R9" library="rcl" deviceset="R-EU_" device="0204/7" value="4.7k"/>
+<part name="R10" library="rcl" deviceset="R-EU_" device="0204/7" value="2.2k"/>
 <part name="GND14" library="supply1" deviceset="GND" device=""/>
 <part name="Q2" library="crystal" deviceset="CRYSTAL" device="TC26H" value="32.768kHz"/>
 <part name="C8" library="rcl" deviceset="C-EU" device="025-024X044" value="30pF"/>
