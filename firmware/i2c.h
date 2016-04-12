@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   i2c.h
  * Author: mickael
  *

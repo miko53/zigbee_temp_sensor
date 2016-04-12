@@ -15,7 +15,7 @@
 extern "C" {
 #endif
 
-extern void hyt221_launch_acq();
+extern STATUS_T hyt221_launch_acq();
 extern STATUS_T hyt221_operation();
 extern uint16_t hyt221_getTemp();
 extern uint16_t hyt221_getHumidity();

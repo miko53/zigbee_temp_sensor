@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   uart_loc.h
  * Author: mickael
  *
@@ -11,7 +11,7 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif
-    
+
 #include <stdint.h>
 
 #define USART_RX_BUFFER_SIZE          (50)

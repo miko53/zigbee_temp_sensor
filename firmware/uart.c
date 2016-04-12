@@ -68,3 +68,4 @@ BOOL uart_read(uint8_t* buffer, uint8_t nbToRead)
     return expectedNbRead;
 }
 
+

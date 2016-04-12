@@ -17,7 +17,7 @@ static int8_t gData[4];
 //static int32_t nbStale;
 
 
-void hyt221_launch_acq()
+STATUS_T hyt221_launch_acq()
 {
   i2c_trig_start();
 
@@ -30,12 +30,14 @@ void hyt221_launch_acq()
   //if the device doesn't respond, indicate error with RED led
   if (SSPCON2bits.ACKSTAT == 1)
   {
-    led_red_ON();
+    leds_red_and_yellow_glitch();
+    return STATUS_ERROR;
   }
 
   i2c_wait_idle();
   i2c_trig_stop();
   __delay_us(1);
+  return STATUS_OK;
 }
 
 
@@ -55,7 +57,7 @@ STATUS_T hyt221_operation()
   //read ACK
   if (SSPCON2bits.ACKSTAT == 1)
   {
-    led_red_ON();
+    leds_red_and_yellow_glitch();
     i2c_trig_stop();
     return STATUS_ERROR;
   }

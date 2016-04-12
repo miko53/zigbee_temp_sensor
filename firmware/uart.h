@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   uart.h
  * Author: mickael
  *
@@ -13,6 +13,7 @@ extern "C" {
 #endif
 
 #include <xc.h>
+#include <stdint.h>
 
 extern void uart_setup();
 extern void uart_write(uint8_t size, uint8_t* buffer);

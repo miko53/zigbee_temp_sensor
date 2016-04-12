@@ -24,7 +24,7 @@ void i2c_setup()
   SSPCON1 = 0x28; //RC3 and RC4 in I2C master mode
   SSPCON2 = 0x00; //I2C in idle
 
-  //clear interupt register I2C interupt and bus collision interupt
+  //clear interrupt register I2C interupt and bus collision interupt
   PIR1bits.SSPIF = 0;
   PIR2bits.BCLIF = 0;
 }

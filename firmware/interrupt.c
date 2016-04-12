@@ -37,6 +37,13 @@ void interrupt high_priority isr_hi(void)
         return;
     }
 
+    //IT A/D conversion
+    if (PIE1bits.ADIE & PIR1bits.ADIF)
+    {
+        PIR1bits.ADIF = 0;
+        return;
+    }
+
     //IT UART RECEPTION
     if (PIE1bits.RC1IE & PIR1bits.RCIF)
     {
@@ -48,6 +55,7 @@ void interrupt high_priority isr_hi(void)
         {
            //framing error
            UART_errorStatus.framingError++;
+           //LATD |= 0x02;
            dummy = RCREG;
         }
         else if (RCSTAbits.OERR)
@@ -55,6 +63,7 @@ void interrupt high_priority isr_hi(void)
             //overrun error, set reception again
             UART_errorStatus.overrunError++;
             dummy = RCREG;
+            //LATD |= 0x04;
             RCSTAbits.CREN = 0;
         }
         else if (UART_rxBufferNb < USART_RX_BUFFER_SIZE)

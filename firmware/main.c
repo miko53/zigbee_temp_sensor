@@ -1,23 +1,17 @@
-#include <xc.h>
-#include <stdint.h>
-#include "config.h"
-#include "leds.h"
-#include "status.h"
-#include "uart.h"
-#include "i2c.h"
-#include "global.h"
-#include "zb_handle.h"
-#include "hyt221.h"
 
-//uint8_t nbCharRecu;
-//static STATUS_T i2c_operation();
-//static void wait_infinite();
-//static void i2c_launch_acq();
-//static void do_calculate_temp_humd();
-//void i2c_main_loop();
+#include <xc.h>
+#include "config.h"
+#include "global.h"
+#include "uart.h"
+#include "zb_handle.h"
+#include "status.h"
+#include "leds.h"
+#include "i2c.h"
+#include "hyt221.h"
+#include "osc.h"
 
 static void main_loop();
-
+static void wait_endOfConversion(void);
 
 int main(void)
 {
@@ -25,40 +19,44 @@ int main(void)
   //set up internal clock to 1MHz
   OSCCON  = 0x40;
 
-  //configure PORT D in output for led display
-  PORTD = 0x0;
-  TRISD = 0x0;
+  //configure PORT A in output for led display and zigbee mngt
+  PORTA = 0x0;
+  TRISA = 0x0;
 
-  ///configure PORD B in output for zigbee mgt
-  //set analog input into digital input
-  ADCON1 = 0x05; //AN10(RB1)/AN11(RB4)/AN12(RB0)
+  PORTBbits.RB1 = 0;
+  TRISBbits.RB1 = 0; //set RB1 in OUTPUT
+  TRISBbits.RB2 = 1; //set RB2 in INPUT (AN8)
+  PIR1bits.ADIF = 0; //set A/D buffer to empty
+  PIE1bits.ADIE = 1; //enable A/D interrupt
 
-  //put RB0 and RB1 in output
-  //RB0 = _RESET
-  //RB1 = SLEEP_RQ
-  LATB = 0x01;
-  TRISB = 0xFC;
+  __delay_ms(5);
+  T1CON = 0x0F;
+  //int_rc_cal();
+  calibration();
+  OSCTUNE = 0;
+  __delay_ms(5);
+  T1CON = 0;
 
   i2c_setup();
   uart_setup();
-  
-  //TIMER setup
-  //1MHz --> 250kHz /2 --> 125kHz by 255  2.04ms
-  //T0CON = 0xC0; // enable timer, 8bits timer
-  //INTCONbits.TMR0IE = 1;
 
   INTCONbits.PEIE = 1; //activate peripherical interrupt
   INTCONbits.GIE = 1; //activate global interrupt
 
-  //uint8_t requestHWversion[] =
-  //{ 0x7e,  0x00, 0x04, 0x08 , 0x03, 'H', 'V', 0x56 };
-  //uart_write(sizeof(requestHWversion), requestHWversion);
-
-  //generate a reset of XBee module cycle time to 1MHZ give 4µs, the pulse must be at least 200ns
-  LATBbits.LATB0 = 0;
-  LATBbits.LATB0 = 1;
+  XBEE_RESET_ON();
+  XBEE_RESET_OFF();
 
   main_loop();
+  
+  while (1)
+  {
+      __delay_ms(500);
+      LATA = 0x1C;
+      __delay_ms(500);
+      LATA = 0x00;
+  }
+
+  
 }
 
 typedef enum
@@ -70,9 +68,7 @@ typedef enum
 } main_stateT;
 
 static main_stateT main_state;
-//static uint8_t wakeTick;
-static void wait_endOfConversion(void);
-
+uint16_t batt_value;
 
 static void main_loop()
 {
@@ -104,24 +100,67 @@ static void main_loop()
           default:
               break;
       }
-      
+
       switch (main_state)
       {
           case WAIT_JOINED:
               break;
 
           case JOINED:
-              hyt221_launch_acq();
-              main_state = WAIT_HYT221_ACQ;
+              hyt221_status = hyt221_launch_acq();
+              if (hyt221_status == STATUS_OK)
+              {
+                main_state = WAIT_HYT221_ACQ;
+              }
+
               break;
 
           case SLEEP:
               //sleep 1min
-              LATBbits.LATB1 = 1; //sleep request
-              WDTCONbits.SWDTEN = 1;
-              SLEEP();
-              WDTCONbits.SWDTEN = 0;
-              LATBbits.LATB1 = 0; //end of sleep
+#if 0
+              LATBbits.LATB1 = 1; //XBee sleep request
+              WDTCONbits.SWDTEN = 0; // = 1activate watchdow
+              //SLEEP();
+#if 1
+              {
+                  LATB |= 0x04; //activate batt_sensor
+                  ADCON1 = 0x00; //Vss & Vdd src reference, only AN0
+                  ADCON0 = 0; //disable and select AN0
+                  ADCON2 = 0x8B; //right justifed, 2Tad, Frc
+                  ADCON0 |= 1; //start A/D movule
+                  ADCON0 |= 0x2 ; //start conversion
+                  //while ((ADCON0 & 0x02) == 0x02)
+                      SLEEP();
+                      while ((ADCON0 & 0x02) == 0x02)
+                          ;
+                  batt_value = (ADRESH<<8) | ADRESL;
+                  LATB &= ~0x04; //desactivate batt_sensor
+                  zb_handle_setbatVolt(calibr/*mesrd_instr*//*batt_value*/);
+
+              }
+#endif
+              WDTCONbits.SWDTEN = 0; //desactivate watchdow
+              LATBbits.LATB1 = 0; //XBee end of sleep request
+#endif
+
+#if 1
+              {
+                  LATBbits.LATB1 = 1; //activate batt_sensor
+                  ADCON1 = 0x00; //Vss & Vdd src reference, only AN0
+                  ADCON0 = 0x20; //disable and select AN8
+                  ADCON2 = 0x8B; //right justifed, 2Tad, Frc
+                  ADCON0 |= 1; //start A/D movule
+                  ADCON0 |= 0x2 ; //start conversion
+                  //while ((ADCON0 & 0x02) == 0x02)
+                      SLEEP();
+                      while ((ADCON0 & 0x02) == 0x02)
+                          ;
+                  batt_value = (ADRESH<<8) | ADRESL;
+                  LATBbits.LATB1 = 0; //desactivate batt_sensor
+                  zb_handle_setbatVolt(batt_value);///*calibr*//*mesrd_instr*/batt_value);
+
+              }
+#endif
               main_state = WAIT_JOINED;
               break;
 
@@ -132,7 +171,9 @@ static void main_loop()
               if (hyt221_status == STATUS_OK)
               {
                   //send data
-                  zb_handle_sendData(hyt221_getTemp(), hyt221_getHumidity());
+                  zb_handle_setTempRaw(hyt221_getTemp());
+                  zb_handle_setHumidityRaw(hyt221_getHumidity());
+                  zb_handle_sendData();
                   //leds_green_glitch();
                   __delay_ms(500); //400  + 100 in glitch
                   main_state = SLEEP;
@@ -146,9 +187,9 @@ static void main_loop()
           default:
               break;
       }
+      
   }
 }
-
 
 static void wait_endOfConversion(void)
 {

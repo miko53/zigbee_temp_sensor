@@ -67,12 +67,11 @@ void zb_handle(void)
             case ZIGBEE_TRANSMIT_STATUS:
                 if (decodedFrame.status != 0)
                 {
-                  led_red_ON();
-                  //led_green_OFF();
+                    leds_red_glitch();
                 }
                 else
                 {
-                  //led_green_ON();
+                    //leds_green_glitch();
                 }
                 break;
 
@@ -109,13 +108,18 @@ void zb_handle(void)
 #define SENSOR_HYT221_HUM             (0x02)
 #define SENSOR_VOLTAGE                (0x03)
 
+#define STATUS_NORMAL_DATA            (0x03)
+#define STATUS_INVALID                (0x00)
 
 #define OFFSET_SIZE         (1)
 #define OFFSET_FRAMEID      (4)
 #define OFFSET_COUNTER      (18)
-#define OFFSET_TEMPERATURE (21)
-#define OFFSET_HUMIDITY    (24)
-#define OFFSET_VOLTAGE     (27)
+#define OFFSET_TEMPERATURE_STATUS (21)
+#define OFFSET_TEMPERATURE (22)
+#define OFFSET_HUMIDITY_STATUS    (25)
+#define OFFSET_HUMIDITY    (26)
+#define OFFSET_VOLTAGE_STATUS     (29)
+#define OFFSET_VOLTAGE     (30)
 
 
 const uint8_t frameData[] = 
@@ -140,34 +144,52 @@ const uint8_t frameData[] =
   //payload
   SENSOR_PROTOCOL_DATA_TYPE,
   0x00,//counter
-  0x03,
+  0x03,//number of sensor 
   SENSOR_HYT221_TEMP,
+  0x00, //status
   0x00,
   0x00,
   SENSOR_HYT221_HUM,
+  0x00, //status
   0x00,
   0x00,
   SENSOR_VOLTAGE,
+  0x00, //status
   0x00,
   0x00  
   //and checksum
 };
 
-static uint8_t zb_frameToSend[35];
+static uint8_t zb_frameToSend[38];
 static uint8_t zb_frameID = 2;
 static uint8_t zb_counter;
 
-void zb_handle_sendData(uint16_t tempRaw, uint16_t humidityRaw)
+typedef struct
+{
+    uint16_t tempRaw;
+    uint8_t tempStatus;
+    uint16_t humidityRaw;
+    uint8_t humidityStatus;
+    uint16_t battRaw;
+    uint8_t battStatus;
+} sensor;
+
+static sensor sensor_data;
+
+void zb_handle_sendData()
 {
     memcpy(zb_frameToSend, frameData,  sizeof(frameData));
     zb_frameToSend[OFFSET_FRAMEID] = zb_frameID++;
     zb_frameToSend[OFFSET_COUNTER] = zb_counter++;
-    zb_frameToSend[OFFSET_TEMPERATURE]   = tempRaw>>8;
-    zb_frameToSend[OFFSET_TEMPERATURE+1] = tempRaw;
-    zb_frameToSend[OFFSET_HUMIDITY]   = humidityRaw>>8;
-    zb_frameToSend[OFFSET_HUMIDITY+1] = humidityRaw;
-    zb_frameToSend[OFFSET_VOLTAGE]   = 0xFF;
-    zb_frameToSend[OFFSET_VOLTAGE+1] = 0xFF;
+    zb_frameToSend[OFFSET_TEMPERATURE_STATUS]   = sensor_data.tempStatus;
+    zb_frameToSend[OFFSET_TEMPERATURE]   = sensor_data.tempRaw>>8;
+    zb_frameToSend[OFFSET_TEMPERATURE+1] = sensor_data.tempRaw;
+    zb_frameToSend[OFFSET_HUMIDITY_STATUS]   = sensor_data.humidityStatus;
+    zb_frameToSend[OFFSET_HUMIDITY]   = sensor_data.humidityRaw>>8;
+    zb_frameToSend[OFFSET_HUMIDITY+1] = sensor_data.humidityRaw;
+    zb_frameToSend[OFFSET_VOLTAGE_STATUS]   = sensor_data.battStatus;
+    zb_frameToSend[OFFSET_VOLTAGE]   = sensor_data.battRaw>>8;
+    zb_frameToSend[OFFSET_VOLTAGE+1] = sensor_data.battRaw;
     zb_frameToSend[OFFSET_SIZE] = ((sizeof(frameData)-ZB_HEADER_SIZE) & 0xFF00)>>8;
     zb_frameToSend[OFFSET_SIZE+1] = ((sizeof(frameData)-ZB_HEADER_SIZE) & 0x00FF);
 
@@ -176,6 +198,30 @@ void zb_handle_sendData(uint16_t tempRaw, uint16_t humidityRaw)
     uart_write(frameSize, zb_frameToSend);
 }
 
+void zb_handle_setTempRaw(uint16_t tempRaw)
+{
+    sensor_data.tempRaw = tempRaw;
+    sensor_data.tempStatus = STATUS_NORMAL_DATA;
+}
+
+void zb_handle_setHumidityRaw(uint16_t humidityRaw)
+{
+    sensor_data.humidityRaw = humidityRaw;
+    sensor_data.humidityStatus = STATUS_NORMAL_DATA;
+}
+
+void zb_handle_setbatVolt(uint16_t battVoltage)
+{
+    sensor_data.battRaw = battVoltage;
+    sensor_data.battStatus = STATUS_NORMAL_DATA;
+}
+
+void zb_handle_resetStatus()
+{
+    sensor_data.battStatus = STATUS_INVALID;
+    sensor_data.humidityStatus = STATUS_INVALID;
+    sensor_data.tempStatus = STATUS_INVALID;
+}
 
 static void zigbee_appendChecksum(uint8_t* buffer, uint8_t* sizeFrame)
 {

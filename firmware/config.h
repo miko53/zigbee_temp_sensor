@@ -1,16 +1,22 @@
-/*
+/* 
  * File:   config.h
  * Author: mickael
  *
- * Created on 5 avril 2015, 11:14
+ * Created on 6 décembre 2015, 18:53
  */
 
 #ifndef CONFIG_H
 #define	CONFIG_H
 
-#ifdef	__cplusplus
-extern "C" {
-#endif
+
+// PIC18F4520 Configuration Bit Settings
+
+// 'C' source line config statements
+
+#include <xc.h>
+
+// #pragma config statements should precede project file includes.
+// Use project enums instead of #define for ON and OFF.
 
 // CONFIG1H
 #pragma config OSC = INTIO67    // Oscillator Selection bits (Internal oscillator block, port function on RA6 and RA7)
@@ -24,7 +30,7 @@ extern "C" {
 
 // CONFIG2H
 #pragma config WDT = OFF        // Watchdog Timer Enable bit (WDT disabled (control is placed on the SWDTEN bit))
-#pragma config WDTPS = 16384    // Watchdog Timer Postscale Select bits (1:32768)
+#pragma config WDTPS = 16384    // Watchdog Timer Postscale Select bits (1:16384)
 
 // CONFIG3H
 #pragma config CCP2MX = PORTC   // CCP2 MUX bit (CCP2 input/output is multiplexed with RC1)
@@ -34,15 +40,15 @@ extern "C" {
 
 // CONFIG4L
 #pragma config STVREN = ON      // Stack Full/Underflow Reset Enable bit (Stack full/underflow will cause Reset)
-#pragma config LVP = OFF         // Single-Supply ICSP Enable bit (Single-Supply ICSP enabled)
-#pragma config XINST = OFF       // Extended Instruction Set Enable bit (Instruction set extension and Indexed Addressing mode disabled)
+#pragma config LVP = OFF        // Single-Supply ICSP Enable bit (Single-Supply ICSP disabled)
+#pragma config XINST = OFF      // Extended Instruction Set Enable bit (Instruction set extension and Indexed Addressing mode disabled (Legacy mode))
 #pragma config DEBUG = ON         //debug pin on RB6 & RB7
 
 // CONFIG5L
 #pragma config CP0 = OFF        // Code Protection bit (Block 0 (000800-001FFFh) not code-protected)
 #pragma config CP1 = OFF        // Code Protection bit (Block 1 (002000-003FFFh) not code-protected)
-#pragma config CP2 = OFF        // Code Protection bit (Block 2 (004000-005FFFh) not code-protected)
-#pragma config CP3 = OFF        // Code Protection bit (Block 3 (006000-007FFFh) not code-protected)
+//#pragma config CP2 = OFF        // Code Protection bit (Block 2 (004000-005FFFh) not code-protected)
+//#pragma config CP3 = OFF        // Code Protection bit (Block 3 (006000-007FFFh) not code-protected)
 
 // CONFIG5H
 #pragma config CPB = OFF        // Boot Block Code Protection bit (Boot block (000000-0007FFh) not code-protected)
@@ -51,8 +57,8 @@ extern "C" {
 // CONFIG6L
 #pragma config WRT0 = OFF       // Write Protection bit (Block 0 (000800-001FFFh) not write-protected)
 #pragma config WRT1 = OFF       // Write Protection bit (Block 1 (002000-003FFFh) not write-protected)
-#pragma config WRT2 = OFF       // Write Protection bit (Block 2 (004000-005FFFh) not write-protected)
-#pragma config WRT3 = OFF       // Write Protection bit (Block 3 (006000-007FFFh) not write-protected)
+//#pragma config WRT2 = OFF       // Write Protection bit (Block 2 (004000-005FFFh) not write-protected)
+//#pragma config WRT3 = OFF       // Write Protection bit (Block 3 (006000-007FFFh) not write-protected)
 
 // CONFIG6H
 #pragma config WRTC = OFF       // Configuration Register Write Protection bit (Configuration registers (300000-3000FFh) not write-protected)
@@ -62,17 +68,14 @@ extern "C" {
 // CONFIG7L
 #pragma config EBTR0 = OFF      // Table Read Protection bit (Block 0 (000800-001FFFh) not protected from table reads executed in other blocks)
 #pragma config EBTR1 = OFF      // Table Read Protection bit (Block 1 (002000-003FFFh) not protected from table reads executed in other blocks)
-#pragma config EBTR2 = OFF      // Table Read Protection bit (Block 2 (004000-005FFFh) not protected from table reads executed in other blocks)
-#pragma config EBTR3 = OFF      // Table Read Protection bit (Block 3 (006000-007FFFh) not protected from table reads executed in other blocks)
+//#pragma config EBTR2 = OFF      // Table Read Protection bit (Block 2 (004000-005FFFh) not protected from table reads executed in other blocks)
+//#pragma config EBTR3 = OFF      // Table Read Protection bit (Block 3 (006000-007FFFh) not protected from table reads executed in other blocks)
 
 // CONFIG7H
 #pragma config EBTRB = OFF      // Boot Block Table Read Protection bit (Boot block (000000-0007FFh) not protected from table reads executed in other blocks)
 
 
 
-#ifdef	__cplusplus
-}
-#endif
 
 #endif	/* CONFIG_H */
 

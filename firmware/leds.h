@@ -12,23 +12,10 @@
 extern "C" {
 #endif
 
-#define     LED_YELLOW      (0x01)
-#define     LED_RED         (0x02)
-#define     LED_GREEN       (0x04)
-
-#define led_red_ON() LATD |= LED_RED
-#define led_red_OFF() LATD &= ~LED_RED
-
-#define led_yellow_ON() LATD |= LED_YELLOW
-#define led_yellow_OFF() LATD &= ~LED_YELLOW
-
-#define led_green_ON() LATD |= LED_GREEN
-#define led_green_OFF() LATD &= ~LED_GREEN
-
 extern void leds_red_glitch(void);
 extern void leds_yellow_glitch(void);
 extern void leds_green_glitch(void);
-
+extern void leds_red_and_yellow_glitch();
 
 #ifdef	__cplusplus
 }
