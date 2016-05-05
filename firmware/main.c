@@ -68,12 +68,19 @@ typedef enum
 } main_stateT;
 
 static main_stateT main_state;
-uint16_t batt_value;
+static uint16_t batt_value;
+static uint8_t batt_counter;
+static uint8_t wait_join_counter;
+
+static void batt_launch_acq();
 
 static void main_loop()
 {
   zb_statusT zb_status;
   STATUS_T hyt221_status;
+
+  batt_counter = 5;
+  wait_join_counter = 0;
   main_state = WAIT_JOINED;
 
   leds_green_glitch();
@@ -104,9 +111,26 @@ static void main_loop()
       switch (main_state)
       {
           case WAIT_JOINED:
+              wait_join_counter++;
+              if (wait_join_counter >= 5)
+              {
+                  wait_join_counter = 0;
+                  WDTCONbits.SWDTEN = 1; // = activate watchdow
+                  SLEEP();
+                  WDTCONbits.SWDTEN = 0; //desactivate watchdow
+              }
               break;
 
           case JOINED:
+              zb_handle_resetStatus();
+              
+              batt_counter++;
+              if (batt_counter >= 5)
+              {
+                batt_counter = 0;
+                batt_launch_acq();
+              }
+
               hyt221_status = hyt221_launch_acq();
               if (hyt221_status == STATUS_OK)
               {
@@ -116,51 +140,14 @@ static void main_loop()
               break;
 
           case SLEEP:
-              //sleep 1min
-#if 0
-              LATBbits.LATB1 = 1; //XBee sleep request
-              WDTCONbits.SWDTEN = 0; // = 1activate watchdow
-              //SLEEP();
-#if 1
-              {
-                  LATB |= 0x04; //activate batt_sensor
-                  ADCON1 = 0x00; //Vss & Vdd src reference, only AN0
-                  ADCON0 = 0; //disable and select AN0
-                  ADCON2 = 0x8B; //right justifed, 2Tad, Frc
-                  ADCON0 |= 1; //start A/D movule
-                  ADCON0 |= 0x2 ; //start conversion
-                  //while ((ADCON0 & 0x02) == 0x02)
-                      SLEEP();
-                      while ((ADCON0 & 0x02) == 0x02)
-                          ;
-                  batt_value = (ADRESH<<8) | ADRESL;
-                  LATB &= ~0x04; //desactivate batt_sensor
-                  zb_handle_setbatVolt(calibr/*mesrd_instr*//*batt_value*/);
+              //sleep around 1min
 
-              }
-#endif
+              LATBbits.LATB1 = 1; //XBee sleep request
+              WDTCONbits.SWDTEN = 1; // = activate watchdow
+              SLEEP();
               WDTCONbits.SWDTEN = 0; //desactivate watchdow
               LATBbits.LATB1 = 0; //XBee end of sleep request
-#endif
 
-#if 1
-              {
-                  LATBbits.LATB1 = 1; //activate batt_sensor
-                  ADCON1 = 0x00; //Vss & Vdd src reference, only AN0
-                  ADCON0 = 0x20; //disable and select AN8
-                  ADCON2 = 0x8B; //right justifed, 2Tad, Frc
-                  ADCON0 |= 1; //start A/D movule
-                  ADCON0 |= 0x2 ; //start conversion
-                  //while ((ADCON0 & 0x02) == 0x02)
-                      SLEEP();
-                      while ((ADCON0 & 0x02) == 0x02)
-                          ;
-                  batt_value = (ADRESH<<8) | ADRESL;
-                  LATBbits.LATB1 = 0; //desactivate batt_sensor
-                  zb_handle_setbatVolt(batt_value);///*calibr*//*mesrd_instr*/batt_value);
-
-              }
-#endif
               main_state = WAIT_JOINED;
               break;
 
@@ -187,7 +174,6 @@ static void main_loop()
           default:
               break;
       }
-      
   }
 }
 
@@ -199,4 +185,23 @@ static void wait_endOfConversion(void)
   SLEEP(); //TODO check that end of idle mode on IT timer
   OSCCONbits.IDLEN = 0; //reset idle mode on sleep instruction
   T0CONbits.TMR0ON = 0; //stop timer
+}
+
+
+static void batt_launch_acq()
+{
+  LATBbits.LATB1 = 1; //activate batt_sensor
+  ADCON1 = 0x00; //Vss & Vdd src reference, only AN0
+  ADCON0 = 0x20; //disable and select AN8
+  ADCON2 = 0x8B; //right justifed, 2Tad, Frc
+  ADCON0 |= 1; //start A/D movule
+  ADCON0 |= 0x2 ; //start conversion
+
+  SLEEP();
+  while ((ADCON0 & 0x02) == 0x02)
+      ;
+
+  batt_value = (ADRESH<<8) | ADRESL;
+  LATBbits.LATB1 = 0; //desactivate batt_sensor
+  zb_handle_setbatVolt(batt_value);///*calibr*//*mesrd_instr*/batt_value);
 }
