@@ -2,6 +2,9 @@
 #include <xc.h>
 #include "global.h"
 #include "i2c.h"
+#include "i2c_loc.h"
+
+BOOL i2c_interupt_done;
 
 void i2c_setup()
 {
@@ -25,14 +28,21 @@ void i2c_setup()
   SSPCON2 = 0x00; //I2C in idle
 
   //clear interrupt register I2C interupt and bus collision interupt
+  i2c_interupt_done = FALSE;
   PIR1bits.SSPIF = 0;
   PIR2bits.BCLIF = 0;
+  PIE1bits.SSPIE = 1;  //ADDD
 }
 
 void i2c_wait_ready()
 {
-    while (PIR1bits.SSPIF == 0);
-    PIR1bits.SSPIF = 0;
+    OSCCONbits.IDLEN = 1;
+    SLEEP();
+    OSCCONbits.IDLEN = 0;
+    while (i2c_interupt_done == FALSE);
+    //while (PIR1bits.SSPIF == 0);
+    //PIR1bits.SSPIF = 0;
+    i2c_interupt_done = FALSE;
 }
 
 void i2c_wait_idle()
@@ -44,11 +54,8 @@ void i2c_wait_idle()
 void i2c_trig_start()
 {
   i2c_wait_idle();
-
   //generate start condition
   SSPCON2bits.SEN = 1;
-  while (SSPCON2bits.SEN == 1);
-
   i2c_wait_ready();
 }
 
@@ -56,6 +63,5 @@ void i2c_trig_stop()
 {
   //set Stop sequence
   SSPCON2bits.PEN = 1;
-  while (SSPCON2bits.PEN);
   i2c_wait_ready();
 }

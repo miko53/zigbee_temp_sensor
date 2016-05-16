@@ -18,7 +18,7 @@ void uart_setup()
   RCSTA = 0x90; // serial enabled SPEN set, Asynch mode, disable addr
   BAUDCON = 0x48; ////default & BRG16 set
   SPBRGH = 0;
-  SPBRG = 25; //25 for 9600 baud 12 for 19200 bauds
+  SPBRG = 12; //25 for 9600 baud 12 for 19200 bauds
 
   PIR1bits.RCIF = 0; //set EUSART buffer to empty
   PIE1bits.RCIE = 1; //enable EUSART interrupt

@@ -2,17 +2,29 @@
 #include <stdint.h>
 #include "leds.h"
 #include "uart_loc.h"
-
+#include "i2c_loc.h"
+/*
 static uint8_t counter = 0;
 static int8_t ledState = 0;
 static int8_t ledYState = 0;
+ */
 
 static uint8_t UART_writeIndex = 0;
 //extern uint8_t nbCharRecu;
 
 void interrupt high_priority isr_hi(void)
 {
+    //I2C IT
+
+    if (PIE1bits.SSPIE & PIR1bits.SSPIF)
+    {
+        PIR1bits.SSPIF = 0;
+        i2c_interupt_done = TRUE;
+        return;
+    }
+
     //IT TIMER
+
     if (INTCONbits.TMR0IE & INTCONbits.TMR0IF)
     {
         /*
@@ -57,6 +69,7 @@ void interrupt high_priority isr_hi(void)
            UART_errorStatus.framingError++;
            //LATD |= 0x02;
            dummy = RCREG;
+           RESET(); //will perform a recalibration and should remove frame error
         }
         else if (RCSTAbits.OERR)
         {

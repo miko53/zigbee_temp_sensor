@@ -36,7 +36,7 @@ STATUS_T hyt221_launch_acq()
 
   i2c_wait_idle();
   i2c_trig_stop();
-  __delay_us(1);
+  NOP();
   return STATUS_OK;
 }
 
@@ -67,7 +67,7 @@ STATUS_T hyt221_operation()
   {
     i2c_wait_idle();
     SSPCON2bits.RCEN = 1; // start I2C reception mode
-    while (SSPCON2bits.RCEN == 1);
+//    while (SSPCON2bits.RCEN == 1);
     i2c_wait_ready();
 
     gData[index] = SSPBUF;
@@ -98,7 +98,6 @@ STATUS_T hyt221_operation()
 
     //send the ACK or NACK bit on I2C bus
     SSPCON2bits.ACKEN = 1;
-    while (SSPCON2bits.ACKEN == 1);
     i2c_wait_ready();
     index++;
   }

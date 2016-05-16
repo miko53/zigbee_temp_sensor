@@ -23,8 +23,21 @@ int main(void)
   PORTA = 0x0;
   TRISA = 0x0;
 
-  PORTBbits.RB1 = 0;
-  TRISBbits.RB1 = 0; //set RB1 in OUTPUT
+  //configure unused ports in output to 0 to min. consumption
+  TRISBbits.RB0 = 0;
+  PORTBbits.RB0 = 0;
+  TRISBbits.RB3 = 0;
+  PORTBbits.RB3 = 0;
+  TRISBbits.RB4 = 0;
+  PORTBbits.RB4 = 0;
+  TRISCbits.RC2 = 0;
+  PORTCbits.RC2 = 0;
+  TRISCbits.RC5 = 0;
+  PORTCbits.RC5 = 0;
+
+  //activate to read the batt voltage
+  PORTBbits.RB1 = 0; //set BATT_ENABLE bit to 0 (no active)
+  TRISBbits.RB1 = 0; //set RB1 in OUTPUT (BATT ENABLE)
   TRISBbits.RB2 = 1; //set RB2 in INPUT (AN8)
   PIR1bits.ADIF = 0; //set A/D buffer to empty
   PIE1bits.ADIE = 1; //enable A/D interrupt
@@ -47,16 +60,6 @@ int main(void)
   XBEE_RESET_OFF();
 
   main_loop();
-  
-  while (1)
-  {
-      __delay_ms(500);
-      LATA = 0x1C;
-      __delay_ms(500);
-      LATA = 0x00;
-  }
-
-  
 }
 
 typedef enum
@@ -141,12 +144,11 @@ static void main_loop()
 
           case SLEEP:
               //sleep around 1min
-
-              LATBbits.LATB1 = 1; //XBee sleep request
+              //LATBbits.LATB1 = 1; //XBee sleep request
               WDTCONbits.SWDTEN = 1; // = activate watchdow
               SLEEP();
               WDTCONbits.SWDTEN = 0; //desactivate watchdow
-              LATBbits.LATB1 = 0; //XBee end of sleep request
+              ///LATBbits.LATB1 = 0; //XBee end of sleep request
 
               main_state = WAIT_JOINED;
               break;
@@ -157,12 +159,14 @@ static void main_loop()
               hyt221_status = hyt221_operation();
               if (hyt221_status == STATUS_OK)
               {
+                  LATBbits.LATB1 = 0; //XBee end of sleep request
                   //send data
                   zb_handle_setTempRaw(hyt221_getTemp());
                   zb_handle_setHumidityRaw(hyt221_getHumidity());
                   zb_handle_sendData();
                   //leds_green_glitch();
-                  __delay_ms(500); //400  + 100 in glitch
+                  LATBbits.LATB1 = 1; //XBee sleep request
+                  //__delay_ms(500); //400  + 100 in glitch
                   main_state = SLEEP;
               }
               else if (hyt221_status == STATUS_ERROR)
@@ -203,5 +207,5 @@ static void batt_launch_acq()
 
   batt_value = (ADRESH<<8) | ADRESL;
   LATBbits.LATB1 = 0; //desactivate batt_sensor
-  zb_handle_setbatVolt(batt_value);///*calibr*//*mesrd_instr*/batt_value);
+  zb_handle_setbatVolt(batt_value);
 }
