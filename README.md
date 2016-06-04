@@ -22,5 +22,6 @@ Most of
 ##### Note:
  - acquisition period will be reviewed to improve consumption
  
- First test gives a autonomy of around 1 we with a temperature/humidity monitoring of 1min and battery monitoring at 5min
+autonomy test on going, with hourly reception of battery value and reception of temp/humidity each minutes
+ - estimation: more than 6 months if I interpolate the current consumption.
 
