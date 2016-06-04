@@ -179,7 +179,7 @@ static sensor sensor_data;
 void zb_handle_sendData()
 {
     memcpy(zb_frameToSend, frameData,  sizeof(frameData));
-    zb_frameToSend[OFFSET_FRAMEID] = zb_frameID++;
+    zb_frameToSend[OFFSET_FRAMEID] = 0;//zb_frameID++;
     zb_frameToSend[OFFSET_COUNTER] = zb_counter++;
     zb_frameToSend[OFFSET_TEMPERATURE_STATUS]   = sensor_data.tempStatus;
     zb_frameToSend[OFFSET_TEMPERATURE]   = sensor_data.tempRaw>>8;

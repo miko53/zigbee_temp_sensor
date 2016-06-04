@@ -38,6 +38,7 @@ void uart_write(uint8_t size, uint8_t* buffer)
           ;
       b++;
     }
+    NOP(); //add NOP to correctly send the last byte before to go to sleep
 }
 
 
