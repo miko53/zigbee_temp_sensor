@@ -16,6 +16,7 @@ extern void leds_red_glitch(void);
 extern void leds_yellow_glitch(void);
 extern void leds_green_glitch(void);
 extern void leds_red_and_yellow_glitch();
+extern void leds_green_and_yellow_glitch();
 
 #ifdef	__cplusplus
 }

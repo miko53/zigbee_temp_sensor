@@ -59,20 +59,28 @@ void zb_handle(void)
 
             case ZIGBEE_MODEM_STATUS:
                 if (decodedFrame.status == 0x02)
+                {
                   zb_status = ZB_STATUS_JOINED;
+                  //leds_green_glitch();
+                }
                 else
+                {
                   zb_status = ZB_STATUS_NOT_JOINED;
+                  //leds_red_glitch();
+                }
                 break;
 
             case ZIGBEE_TRANSMIT_STATUS:
+#if 0
                 if (decodedFrame.status != 0)
                 {
                     leds_red_glitch();
                 }
                 else
                 {
-                    //leds_green_glitch();
+                    leds_green_glitch();
                 }
+#endif
                 break;
 
             case ZIGBEE_RECEIVE_PACKET:
@@ -179,7 +187,7 @@ static sensor sensor_data;
 void zb_handle_sendData()
 {
     memcpy(zb_frameToSend, frameData,  sizeof(frameData));
-    zb_frameToSend[OFFSET_FRAMEID] = 0;//zb_frameID++;
+    zb_frameToSend[OFFSET_FRAMEID] = 0; //zb_frameID++;
     zb_frameToSend[OFFSET_COUNTER] = zb_counter++;
     zb_frameToSend[OFFSET_TEMPERATURE_STATUS]   = sensor_data.tempStatus;
     zb_frameToSend[OFFSET_TEMPERATURE]   = sensor_data.tempRaw>>8;

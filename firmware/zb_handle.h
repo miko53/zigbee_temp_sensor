@@ -16,6 +16,8 @@ extern "C" {
 
 #define XBEE_RESET_OFF()  (LATAbits.LA1 = 1)
 #define XBEE_RESET_ON()   (LATAbits.LA1 = 0)
+#define XBEE_SLEEP_RQ()   (LATAbits.LATA0 = 1)
+#define XBEE_WAKE_UP()    (LATAbits.LATA0 = 0)
 
 typedef enum
 {

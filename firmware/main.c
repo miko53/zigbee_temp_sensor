@@ -100,7 +100,8 @@ static void main_loop()
           case ZB_STATUS_NOT_JOINED:
               main_state = WAIT_JOINED;
               leds_yellow_glitch();
-              __delay_ms(400); //400+100 in glitch func
+              wait_endOfTransmission();
+              wait_endOfTransmission();
               break;
 
           case ZB_STATUS_JOINED:
@@ -116,16 +117,15 @@ static void main_loop()
               break;
       }
 
+      
       switch (main_state)
       {
           case WAIT_JOINED:
               wait_join_counter++;
-              if (wait_join_counter >= 5)
+              if (wait_join_counter >= 50)
               {
                   wait_join_counter = 0;
-                  WDTCONbits.SWDTEN = 1; // = activate watchdow
-                  SLEEP();
-                  WDTCONbits.SWDTEN = 0; //desactivate watchdow
+                  RESET();
               }
               break;
 
@@ -149,9 +149,7 @@ static void main_loop()
 
           case SLEEP:
               //sleep around 1min
-              WDTCONbits.SWDTEN = 1; // = activate watchdow
-              SLEEP();
-              WDTCONbits.SWDTEN = 0; //desactivate watchdow
+              DEEP_SLEEP();
               main_state = WAIT_JOINED;
               break;
 
@@ -160,13 +158,13 @@ static void main_loop()
               hyt221_status = hyt221_operation();
               if (hyt221_status == STATUS_OK)
               {
-                  LATAbits.LATA0 = 0; //XBee end of sleep request
+                  XBEE_WAKE_UP(); //XBee end of sleep request
                   //prepare and send data
                   zb_handle_setTempRaw(hyt221_getTemp());
                   zb_handle_setHumidityRaw(hyt221_getHumidity());
                   zb_handle_sendData();
                   wait_endOfTransmission();
-                  LATAbits.LATA0 = 1; //XBee sleep request
+                  XBEE_SLEEP_RQ(); //XBee sleep request
                   main_state = SLEEP;
               }
               else if (hyt221_status == STATUS_ERROR)
@@ -199,9 +197,9 @@ static void wait_endOfTransmission(void)
 {
 //  LATA |= (0x08);//RED ON
   TMR0 = 0;
-  T0CON = 0x46; // set-up timer, 8bits timer,prescaler to 128 for around 131ms
+  T0CON = 0x47; // set-up timer, 8bits timer,prescaler to 256 for around 262ms
   INTCONbits.TMR0IF = 0;
-  INTCONbits.TMR0IE = 1; //active TIMER0 interupt.
+  INTCONbits.TMR0IE = 1; //active TIMER0 interrupt.
   T0CONbits.TMR0ON = 1;
   OSCCONbits.IDLEN = 1; //set Idle mode on Sleep instruction
   SLEEP(); //TODO check that end of idle mode on IT timer

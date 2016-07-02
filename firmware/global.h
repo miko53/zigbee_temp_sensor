@@ -15,7 +15,10 @@ extern "C" {
      //set Frequency to 1MHz
 #define _XTAL_FREQ   (1000000)
 
+#define START_WATCHDOG()  (WDTCONbits.SWDTEN = 1)
+#define STOP_WATCHDOG()   (WDTCONbits.SWDTEN = 0)
 
+#define DEEP_SLEEP()   do { START_WATCHDOG();SLEEP();STOP_WATCHDOG(); } while (0);
 
 #ifdef	__cplusplus
 }
