@@ -9,6 +9,7 @@
 #define	ZB_HANDLE_H
 
 #include <stdint.h>
+#include <xc.h>
 
 #ifdef	__cplusplus
 extern "C" {
@@ -29,6 +30,7 @@ typedef enum
 extern void zb_handle(void);
 extern zb_statusT zb_handle_getStatus(void);
 extern void zb_handle_sendData();
+extern BOOL zb_handle_waitAck();
 extern void zb_handle_setTempRaw(uint16_t tempRaw);
 extern void zb_handle_setHumidityRaw(uint16_t humidityRaw);
 extern void zb_handle_setbatVolt(uint16_t battVoltage);

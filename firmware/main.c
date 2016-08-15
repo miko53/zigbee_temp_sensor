@@ -14,13 +14,20 @@
 
 typedef enum
 {
-  WAIT_JOINED,
-  JOINED,
+  NOT_JOINED,
+  JOINED
+} zb_stateT;
+
+typedef enum
+{
+  LAUNCH_ACQ,
   SLEEP,
   WAIT_HYT221_ACQ,
 } main_stateT;
 
+static zb_stateT zb_state;
 static main_stateT main_state;
+
 static uint16_t batt_value;
 static uint24_t batt_counter;
 static uint8_t wait_join_counter;
@@ -83,7 +90,8 @@ static void main_loop()
 
   batt_counter = BATT_COUNTER_MAX;
   wait_join_counter = 0;
-  main_state = WAIT_JOINED;
+  zb_state = NOT_JOINED;
+  main_state = LAUNCH_ACQ;
 
   leds_green_glitch();
 
@@ -94,84 +102,87 @@ static void main_loop()
     switch (zb_status)
     {
       case ZB_STATUS_NOT_JOINED:
-        main_state = WAIT_JOINED;
+        zb_state = NOT_JOINED;
         leds_yellow_glitch();
         timer0_wait_262ms();
         timer0_wait_262ms();
         break;
 
       case ZB_STATUS_JOINED:
-        if (main_state == WAIT_JOINED)
-        {
-          main_state = JOINED;
-        }
+        zb_state = JOINED;
         break;
 
       case ZB_STATUS_IN_ERROR:
-        leds_red_glitch();
-        break;
-
       default:
+        zb_state = NOT_JOINED;
+        leds_red_glitch();
+        RESET();
         break;
     }
 
-
-    switch (main_state)
+    switch (zb_state)
     {
-      case WAIT_JOINED:
+      case JOINED:
+        switch (main_state)
+        {
+          case LAUNCH_ACQ:
+            zb_handle_resetStatus();
+
+            batt_counter++;
+            if (!(batt_counter < BATT_COUNTER_MAX))
+            {
+              batt_counter = 0;
+              batt_launch_acq();
+            }
+
+            hyt221_status = hyt221_launch_acq();
+            if (hyt221_status == STATUS_OK)
+            {
+              main_state = WAIT_HYT221_ACQ;
+            }
+            break;
+
+          case WAIT_HYT221_ACQ:
+            timer0_wait_65ms();
+            hyt221_status = hyt221_operation();
+            if (hyt221_status == STATUS_OK)
+            {
+              XBEE_WAKE_UP(); //XBee end of sleep request
+              //prepare and send data
+              zb_handle_setTempRaw(hyt221_getTemp());
+              zb_handle_setHumidityRaw(hyt221_getHumidity());
+              zb_handle_sendData();
+              zb_handle_waitAck();
+              XBEE_SLEEP_RQ(); //XBee sleep request
+              main_state = SLEEP;
+            }
+            else if (hyt221_status == STATUS_ERROR)
+            {
+              leds_red_glitch();
+            }
+            break;
+
+          case SLEEP:
+            //sleep around 1min
+            DEEP_SLEEP();
+            main_state = LAUNCH_ACQ;
+            break;
+
+          default:
+            break;
+        }
+
+        break;
+
+      case NOT_JOINED:
+      default:
         wait_join_counter++;
         if (wait_join_counter >= 50)
         {
           wait_join_counter = 0;
           RESET();
         }
-        break;
-
-      case JOINED:
-        zb_handle_resetStatus();
-
-        batt_counter++;
-        if (!(batt_counter < BATT_COUNTER_MAX))
-        {
-          batt_counter = 0;
-          batt_launch_acq();
-        }
-
-        hyt221_status = hyt221_launch_acq();
-        if (hyt221_status == STATUS_OK)
-        {
-          main_state = WAIT_HYT221_ACQ;
-        }
-
-        break;
-
-      case SLEEP:
-        //sleep around 1min
-        DEEP_SLEEP();
-        main_state = WAIT_JOINED;
-        break;
-
-      case WAIT_HYT221_ACQ:
-        timer0_wait_65ms();
-        hyt221_status = hyt221_operation();
-        if (hyt221_status == STATUS_OK)
-        {
-          XBEE_WAKE_UP(); //XBee end of sleep request
-          //prepare and send data
-          zb_handle_setTempRaw(hyt221_getTemp());
-          zb_handle_setHumidityRaw(hyt221_getHumidity());
-          zb_handle_sendData();
-          timer0_wait_262ms(); //wait end of transmission
-          XBEE_SLEEP_RQ(); //XBee sleep request
-          main_state = SLEEP;
-        }
-        else if (hyt221_status == STATUS_ERROR)
-        {
-          leds_red_glitch();
-        }
-        break;
-
-      default:
+        main_state = LAUNCH_ACQ;
         break;
     }
   }

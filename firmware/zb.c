@@ -66,6 +66,7 @@ BOOL zb_decodage(uint8_t* frame, uint8_t frameSize, zigbee_decodedFrame* decoded
         break;
 
       case ZIGBEE_TRANSMIT_STATUS:
+        decodedFrame->frameID = frame[1];
         decodedFrame->status = frame[5];
         break;
 
