@@ -93,89 +93,91 @@ static void main_loop()
 
   while (1)
   {
-      zb_handle();
-      zb_status = zb_handle_getStatus();
-      switch (zb_status)
-      {
-          case ZB_STATUS_NOT_JOINED:
-              main_state = WAIT_JOINED;
-              leds_yellow_glitch();
-              wait_endOfTransmission();
-              wait_endOfTransmission();
-              break;
+    zb_handle();
+    zb_status = zb_handle_getStatus();
+    switch (zb_status)
+    {
+      case ZB_STATUS_NOT_JOINED:
+        main_state = WAIT_JOINED;
+        leds_yellow_glitch();
+        wait_endOfTransmission();
+        wait_endOfTransmission();
+        break;
 
-          case ZB_STATUS_JOINED:
-              if (main_state == WAIT_JOINED)
-                main_state = JOINED;
-              break;
+      case ZB_STATUS_JOINED:
+        if (main_state == WAIT_JOINED)
+        {
+          main_state = JOINED;
+        }
+        break;
 
-          case ZB_STATUS_IN_ERROR:
-              leds_red_glitch();
-              break;
-              
-          default:
-              break;
-      }
+      case ZB_STATUS_IN_ERROR:
+        leds_red_glitch();
+        break;
 
-      
-      switch (main_state)
-      {
-          case WAIT_JOINED:
-              wait_join_counter++;
-              if (wait_join_counter >= 50)
-              {
-                  wait_join_counter = 0;
-                  RESET();
-              }
-              break;
+      default:
+        break;
+    }
 
-          case JOINED:
-              zb_handle_resetStatus();
-              
-              batt_counter++;
-              if (!(batt_counter < BATT_COUNTER_MAX))
-              {
-                batt_counter = 0;
-                batt_launch_acq();
-              }
 
-              hyt221_status = hyt221_launch_acq();
-              if (hyt221_status == STATUS_OK)
-              {
-                main_state = WAIT_HYT221_ACQ;
-              }
+    switch (main_state)
+    {
+      case WAIT_JOINED:
+        wait_join_counter++;
+        if (wait_join_counter >= 50)
+        {
+          wait_join_counter = 0;
+          RESET();
+        }
+        break;
 
-              break;
+      case JOINED:
+        zb_handle_resetStatus();
 
-          case SLEEP:
-              //sleep around 1min
-              DEEP_SLEEP();
-              main_state = WAIT_JOINED;
-              break;
+        batt_counter++;
+        if (!(batt_counter < BATT_COUNTER_MAX))
+        {
+          batt_counter = 0;
+          batt_launch_acq();
+        }
 
-          case WAIT_HYT221_ACQ:
-              wait_endOfConversion();
-              hyt221_status = hyt221_operation();
-              if (hyt221_status == STATUS_OK)
-              {
-                  XBEE_WAKE_UP(); //XBee end of sleep request
-                  //prepare and send data
-                  zb_handle_setTempRaw(hyt221_getTemp());
-                  zb_handle_setHumidityRaw(hyt221_getHumidity());
-                  zb_handle_sendData();
-                  wait_endOfTransmission();
-                  XBEE_SLEEP_RQ(); //XBee sleep request
-                  main_state = SLEEP;
-              }
-              else if (hyt221_status == STATUS_ERROR)
-              {
-                  leds_red_glitch();
-              }
-              break;
+        hyt221_status = hyt221_launch_acq();
+        if (hyt221_status == STATUS_OK)
+        {
+          main_state = WAIT_HYT221_ACQ;
+        }
 
-          default:
-              break;
-      }
+        break;
+
+      case SLEEP:
+        //sleep around 1min
+        DEEP_SLEEP();
+        main_state = WAIT_JOINED;
+        break;
+
+      case WAIT_HYT221_ACQ:
+        wait_endOfConversion();
+        hyt221_status = hyt221_operation();
+        if (hyt221_status == STATUS_OK)
+        {
+          XBEE_WAKE_UP(); //XBee end of sleep request
+          //prepare and send data
+          zb_handle_setTempRaw(hyt221_getTemp());
+          zb_handle_setHumidityRaw(hyt221_getHumidity());
+          zb_handle_sendData();
+          wait_endOfTransmission();
+          XBEE_SLEEP_RQ(); //XBee sleep request
+          main_state = SLEEP;
+        }
+        else if (hyt221_status == STATUS_ERROR)
+        {
+          leds_red_glitch();
+        }
+        break;
+
+      default:
+        break;
+    }
   }
 }
 
@@ -195,7 +197,7 @@ static void wait_endOfConversion(void)
 
 static void wait_endOfTransmission(void)
 {
-//  LATA |= (0x08);//RED ON
+  //  LATA |= (0x08);//RED ON
   TMR0 = 0;
   T0CON = 0x47; // set-up timer, 8bits timer,prescaler to 256 for around 262ms
   INTCONbits.TMR0IF = 0;
@@ -206,8 +208,8 @@ static void wait_endOfTransmission(void)
   OSCCONbits.IDLEN = 0; //reset idle mode on sleep instruction
   T0CONbits.TMR0ON = 0; //stop timer
   INTCONbits.TMR0IE = 0;
-//  __delay_ms(100);
-//  LATA &= ~(0x08); //RED OFF
+  //  __delay_ms(100);
+  //  LATA &= ~(0x08); //RED OFF
 }
 
 static void batt_launch_acq()
@@ -221,9 +223,9 @@ static void batt_launch_acq()
 
   SLEEP();
   while ((ADCON0 & 0x02) == 0x02)
-      ;
+    ;
 
-  batt_value = (ADRESH<<8) | ADRESL;
+  batt_value = (ADRESH << 8) | ADRESL;
   LATBbits.LATB1 = 0; //desactivate batt_sensor
   ADCON0 &= ~0x01; //desactivate A/D converter
   zb_handle_setbatVolt(batt_value);

@@ -27,46 +27,50 @@ void uart_setup()
 
 void uart_write(uint8_t size, uint8_t* buffer)
 {
-    uint8_t i;
-    uint8_t* b;
+  uint8_t i;
+  uint8_t* b;
 
-    b = buffer;
-    for(i = 0; i< size; i++)
-    {
-      TXREG = buffer[i];
-      while (!TXSTAbits.TRMT)
-          ;
-      b++;
-    }
-    NOP(); //add not to correctly send the last byte before to go to sleep
+  b = buffer;
+  for (i = 0; i < size; i++)
+  {
+    TXREG = buffer[i];
+    while (!TXSTAbits.TRMT)
+      ;
+    b++;
+  }
+  NOP(); //add not to correctly send the last byte before to go to sleep
 }
 
 
 BOOL uart_read(uint8_t* buffer, uint8_t nbToRead)
 {
-    BOOL expectedNbRead;
-    uint8_t i;
-    uint8_t* b;
-    b = buffer;
+  BOOL expectedNbRead;
+  uint8_t i;
+  uint8_t* b;
+  b = buffer;
 
-    if (nbToRead <= UART_rxBufferNb)
+  if (nbToRead <= UART_rxBufferNb)
+  {
+    //copy the data into the given buffer
+    for (i = 0; i < nbToRead; i++)
     {
-        //copy the data into the given buffer
-        for(i = 0; i < nbToRead; i++)
-        {
-            *b = UART_rxBuffer[UART_readIndex];
-            UART_readIndex++;
-            if (UART_readIndex >= USART_RX_BUFFER_SIZE)
-                UART_readIndex = 0;
-            b++;
-        }
-        UART_rxBufferNb -= nbToRead;
-        expectedNbRead = TRUE;
+      *b = UART_rxBuffer[UART_readIndex];
+      UART_readIndex++;
+      if (UART_readIndex >= USART_RX_BUFFER_SIZE)
+      {
+        UART_readIndex = 0;
+      }
+      b++;
     }
-    else
-        expectedNbRead = FALSE;
+    UART_rxBufferNb -= nbToRead;
+    expectedNbRead = TRUE;
+  }
+  else
+  {
+    expectedNbRead = FALSE;
+  }
 
-    return expectedNbRead;
+  return expectedNbRead;
 }
 
 

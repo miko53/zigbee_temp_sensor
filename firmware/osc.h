@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   osc.h
  * Author: mickael
  *

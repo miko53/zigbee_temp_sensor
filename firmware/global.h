@@ -12,7 +12,7 @@ extern "C" {
 #endif
 
 
-     //set Frequency to 1MHz
+//set Frequency to 1MHz
 #define _XTAL_FREQ   (1000000)
 
 #define START_WATCHDOG()  (WDTCONbits.SWDTEN = 1)

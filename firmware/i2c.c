@@ -36,18 +36,18 @@ void i2c_setup()
 
 void i2c_wait_ready()
 {
-    OSCCONbits.IDLEN = 1;
-    SLEEP();
-    OSCCONbits.IDLEN = 0;
-    while (i2c_interupt_done == FALSE);
-    //while (PIR1bits.SSPIF == 0);
-    //PIR1bits.SSPIF = 0;
-    i2c_interupt_done = FALSE;
+  OSCCONbits.IDLEN = 1;
+  SLEEP();
+  OSCCONbits.IDLEN = 0;
+  while (i2c_interupt_done == FALSE);
+  //while (PIR1bits.SSPIF == 0);
+  //PIR1bits.SSPIF = 0;
+  i2c_interupt_done = FALSE;
 }
 
 void i2c_wait_idle()
 {
-    while ((SSPCON2 & 0x1F) || (SSPSTATbits.R_W));
+  while ((SSPCON2 & 0x1F) || (SSPSTATbits.R_W));
 }
 
 

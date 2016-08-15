@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   config.h
  * Author: mickael
  *

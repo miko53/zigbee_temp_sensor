@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   status.h
  * Author: mickael
  *
@@ -15,9 +15,9 @@ extern "C" {
 
 typedef enum
 {
-    STATUS_OK,
-    STATUS_ERROR,
-    STATUS_EBUSY
+  STATUS_OK,
+  STATUS_ERROR,
+  STATUS_EBUSY
 } STATUS_T;
 
 

@@ -27,8 +27,8 @@ BOOL zb_decodage(uint8_t* frame, uint8_t frameSize, zigbee_decodedFrame* decoded
 
   if (frameSize >= 1)
   {
-    checksum = zb_doChecksum(frame, frameSize-1);
-    if (checksum != frame[frameSize-1])
+    checksum = zb_doChecksum(frame, frameSize - 1);
+    if (checksum != frame[frameSize - 1])
     {
       //fprintf(stdout, "Checksum KO\n");
       bCorrectlyDecoded = FALSE;
@@ -51,9 +51,13 @@ BOOL zb_decodage(uint8_t* frame, uint8_t frameSize, zigbee_decodedFrame* decoded
         decodedFrame->status = frame[4];
         decodedFrame->size = frameSize - 6;
         if (decodedFrame->size == 0)
+        {
           decodedFrame->data = NULL;
+        }
         else
+        {
           decodedFrame->data = &frame[5];
+        }
         break;
 
       case ZIGBEE_MODEM_STATUS:

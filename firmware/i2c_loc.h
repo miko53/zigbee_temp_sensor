@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   i2c_loc.h
  * Author: mickael
  *

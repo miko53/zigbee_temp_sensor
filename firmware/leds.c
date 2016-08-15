@@ -20,40 +20,40 @@
 
 void leds_red_glitch(void)
 {
-    led_red_ON();
-    __delay_ms(100);
-    led_red_OFF();
+  led_red_ON();
+  __delay_ms(100);
+  led_red_OFF();
 }
 
 void leds_yellow_glitch(void)
 {
-    led_yellow_ON();
-    __delay_ms(100);
-    led_yellow_OFF();
+  led_yellow_ON();
+  __delay_ms(100);
+  led_yellow_OFF();
 }
 
 void leds_green_glitch(void)
 {
-    led_green_ON();
-    __delay_ms(100);
-    led_green_OFF();
+  led_green_ON();
+  __delay_ms(100);
+  led_green_OFF();
 }
 
 
 void leds_red_and_yellow_glitch()
 {
-    led_red_ON();
-    led_yellow_ON();
-    __delay_ms(100);
-    led_red_OFF();
-    led_yellow_OFF();
+  led_red_ON();
+  led_yellow_ON();
+  __delay_ms(100);
+  led_red_OFF();
+  led_yellow_OFF();
 }
 
 void leds_green_and_yellow_glitch()
 {
-    led_green_ON();
-    led_yellow_ON();
-    __delay_ms(100);
-    led_green_OFF();
-    led_yellow_OFF();
+  led_green_ON();
+  led_yellow_ON();
+  __delay_ms(100);
+  led_green_OFF();
+  led_yellow_OFF();
 }

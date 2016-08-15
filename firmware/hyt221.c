@@ -67,7 +67,7 @@ STATUS_T hyt221_operation()
   {
     i2c_wait_idle();
     SSPCON2bits.RCEN = 1; // start I2C reception mode
-//    while (SSPCON2bits.RCEN == 1);
+    //    while (SSPCON2bits.RCEN == 1);
     i2c_wait_ready();
 
     gData[index] = SSPBUF;
@@ -76,16 +76,17 @@ STATUS_T hyt221_operation()
       //check stale bit
       if ((gData[0] & 0x40) == 0x40)
       {
-          //nbStale++;
-          SSPCON2bits.ACKDT = 1;//1;  //set NACK
-          index = 3;
-          bDeviceDataAreStale = TRUE;
+        //nbStale++;
+        SSPCON2bits.ACKDT = 1;//1;  //set NACK
+        index = 3;
+        bDeviceDataAreStale = TRUE;
       }
       else
       {
         SSPCON2bits.ACKDT = 0; //set ACK
       }
-    } else if (index == 3)
+    }
+    else if (index == 3)
     {
       SSPCON2bits.ACKDT = 1;//1;  //set NACK
     }
@@ -106,7 +107,9 @@ STATUS_T hyt221_operation()
   i2c_trig_stop();
 
   if (bDeviceDataAreStale == TRUE)
-      return STATUS_EBUSY;
+  {
+    return STATUS_EBUSY;
+  }
 
   return STATUS_OK;
 }
@@ -114,22 +117,22 @@ STATUS_T hyt221_operation()
 
 uint16_t hyt221_getTemp()
 {
-     uint16_t temp_raw;
-    temp_raw = gData[2];
-    temp_raw = temp_raw << 8;
-    temp_raw += gData[3];
-    temp_raw = temp_raw >> 2;
-    return temp_raw;
+  uint16_t temp_raw;
+  temp_raw = gData[2];
+  temp_raw = temp_raw << 8;
+  temp_raw += gData[3];
+  temp_raw = temp_raw >> 2;
+  return temp_raw;
 }
 
 uint16_t hyt221_getHumidity()
 {
-   uint16_t humidity_raw;
-    humidity_raw = (gData[0] & 0x3F);
-    humidity_raw = humidity_raw << 8;
-    humidity_raw += gData[1];
+  uint16_t humidity_raw;
+  humidity_raw = (gData[0] & 0x3F);
+  humidity_raw = humidity_raw << 8;
+  humidity_raw += gData[1];
 
-    return humidity_raw;
+  return humidity_raw;
 }
 
 
@@ -141,20 +144,20 @@ uint32_t temp;
 
 static void do_calculate_temp_humd()
 {
-    humidity_raw = (gData[0] & 0x3F);
-    humidity_raw = humidity_raw << 8;
-    humidity_raw += gData[1];
+  humidity_raw = (gData[0] & 0x3F);
+  humidity_raw = humidity_raw << 8;
+  humidity_raw += gData[1];
 
-    temp_raw = gData[2];
-    temp_raw = temp_raw << 8;
-    temp_raw += gData[3];
-    temp_raw = temp_raw >> 2;
+  temp_raw = gData[2];
+  temp_raw = temp_raw << 8;
+  temp_raw += gData[3];
+  temp_raw = temp_raw >> 2;
 
-    humidity = ((uint32_t) humidity_raw) * 1000;
-    humidity = humidity / 16383;
+  humidity = ((uint32_t) humidity_raw) * 1000;
+  humidity = humidity / 16383;
 
-    temp = (uint32_t) temp_raw * 1650;
-    temp = temp - 6553200;
-    temp = temp / 16383;
+  temp = (uint32_t) temp_raw * 1650;
+  temp = temp - 6553200;
+  temp = temp / 16383;
 }
 #endif
