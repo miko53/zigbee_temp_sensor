@@ -3,6 +3,8 @@
 #include "leds.h"
 #include "uart_loc.h"
 #include "i2c_loc.h"
+#include "timer_loc.h"
+
 /*
 static uint8_t counter = 0;
 static int8_t ledState = 0;
@@ -14,8 +16,7 @@ static uint8_t UART_writeIndex = 0;
 
 void interrupt high_priority isr_hi(void)
 {
-  //I2C IT
-
+  //IT I2C
   if (PIE1bits.SSPIE & PIR1bits.SSPIF)
   {
     PIR1bits.SSPIF = 0;
@@ -24,9 +25,9 @@ void interrupt high_priority isr_hi(void)
   }
 
   //IT TIMER
-
   if (INTCONbits.TMR0IE & INTCONbits.TMR0IF)
   {
+    timer0_interupt_done = TRUE;
     /*
     counter++;
     if (counter == 245)

@@ -19,8 +19,6 @@ void i2c_setup()
   //configure PORT C RC3/RC4 for I2C in input
   TRISC |= 0x18;
 
-  //TRISE = 0x0; //PORT E en sortie
-
   //setup I2C bus
   SSPSTAT = 0x80; //slew rate disable --> for speed to 125kHz
   SSPADD  = 0x01;// SSPADD =  0x01; //I2C speed set to 125kHz
@@ -36,10 +34,10 @@ void i2c_setup()
 
 void i2c_wait_ready()
 {
-  OSCCONbits.IDLEN = 1;
-  SLEEP();
-  OSCCONbits.IDLEN = 0;
-  while (i2c_interupt_done == FALSE);
+  IDLE_SLEEP();
+
+  while (i2c_interupt_done == FALSE)
+    ;
   //while (PIR1bits.SSPIF == 0);
   //PIR1bits.SSPIF = 0;
   i2c_interupt_done = FALSE;
@@ -47,7 +45,8 @@ void i2c_wait_ready()
 
 void i2c_wait_idle()
 {
-  while ((SSPCON2 & 0x1F) || (SSPSTATbits.R_W));
+  while ((SSPCON2 & 0x1F) || (SSPSTATbits.R_W))
+    ;
 }
 
 

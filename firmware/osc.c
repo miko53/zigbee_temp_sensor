@@ -14,6 +14,7 @@ void calibration(void)
   int8_t w;
   int8_t tryCounter;
 
+  T1CON = 0x0F;
   tryCounter = 0;
   while (tryCounter < 32)
   {
@@ -76,4 +77,6 @@ void calibration(void)
   }
 
   //OSCCON  = 0x40;
+  T1CON = 0;
+
 }
