@@ -5,6 +5,7 @@
 #include "zb.h"
 #include "leds.h"
 #include "timer.h"
+#include "filter.h"
 
 #define MAX_SIZE_FRAME                (50)
 
@@ -95,12 +96,14 @@ zb_statusT zb_handle_getStatus(void)
 
 void zb_handle_setTempRaw(uint16_t tempRaw)
 {
+  tempRaw = filter(TEMPERATURE_ID, tempRaw);
   sensor_data.tempRaw = tempRaw;
   sensor_data.tempStatus = STATUS_NORMAL_DATA;
 }
 
 void zb_handle_setHumidityRaw(uint16_t humidityRaw)
 {
+  humidityRaw = filter(HUMIDITY_ID, humidityRaw);
   sensor_data.humidityRaw = humidityRaw;
   sensor_data.humidityStatus = STATUS_NORMAL_DATA;
 }
@@ -270,7 +273,7 @@ BOOL zb_handle_waitAck(void)
   bAckReceived = FALSE;
   waitCounter = 0;
 
-  while ((waitCounter < 4) && (bAckReceived == FALSE))
+  while ((waitCounter < 8) && (bAckReceived == FALSE))
   {
     timer0_wait_262ms(); //wait end of transmission
     zb_handle();

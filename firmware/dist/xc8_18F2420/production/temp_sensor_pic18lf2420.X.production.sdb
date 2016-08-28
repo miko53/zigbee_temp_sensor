@@ -55,7 +55,7 @@ ZIGBEE_MODEM_STATUS 138
 ZIGBEE_TRANSMIT_STATUS 139
 ZIGBEE_RECEIVE_PACKET 144
 ]
-"35 /home/mickael/MPLABXProjects/temp_sensor_pic18lf2420.X/zb_handle.c
+"36 /home/mickael/MPLABXProjects/temp_sensor_pic18lf2420.X/zb_handle.c
 [e E3863 . `uc
 ZIGBEE_API_AT_CMD 8
 ZIGBEE_API_TRANSMIT_REQUEST 16
@@ -64,13 +64,19 @@ ZIGBEE_MODEM_STATUS 138
 ZIGBEE_TRANSMIT_STATUS 139
 ZIGBEE_RECEIVE_PACKET 144
 ]
-"86
+"87
 [e E3838 . `uc
 ZB_STATUS_NOT_JOINED 0
 ZB_STATUS_JOINED 1
 ZB_STATUS_IN_ERROR 2
 ]
-"160
+"99
+[e E3898 . `uc
+TEMPERATURE_ID 0
+HUMIDITY_ID 1
+FILTER_ID_MAX 2
+]
+"163
 [e E3195 _BOOL `uc
 FALSE 0
 TRUE 1
@@ -95,6 +101,12 @@ TRUE 1
 [e E3087 _BOOL `uc
 FALSE 0
 TRUE 1
+]
+"14 /home/mickael/MPLABXProjects/temp_sensor_pic18lf2420.X/filter.c
+[e E29 . `uc
+TEMPERATURE_ID 0
+HUMIDITY_ID 1
+FILTER_ID_MAX 2
 ]
 "4 /opt/microchip/xc8/v1.33/sources/common/abdiv.c
 [v ___abdiv __abdiv `(c  1 e 1 0 ]
@@ -218,6 +230,8 @@ TRUE 1
 [v ___asftsub __asftsub `(f  1 e 3 0 ]
 "6 /opt/microchip/xc8/v1.33/sources/pic18/aslmul.c
 [v ___aslmul __aslmul `(ul  1 e 4 0 ]
+"16 /home/mickael/MPLABXProjects/temp_sensor_pic18lf2420.X/filter.c
+[v _filter filter `(ui  1 e 2 0 ]
 "20 /home/mickael/MPLABXProjects/temp_sensor_pic18lf2420.X/hyt221.c
 [v _hyt221_launch_acq hyt221_launch_acq `(E3779  1 e 1 0 ]
 "44
@@ -272,23 +286,23 @@ TRUE 1
 [v _zb_doChecksum zb_doChecksum `(uc  1 e 1 0 ]
 "22
 [v _zb_decodage zb_decodage `(E3083  1 e 1 0 ]
-"91 /home/mickael/MPLABXProjects/temp_sensor_pic18lf2420.X/zb_handle.c
+"92 /home/mickael/MPLABXProjects/temp_sensor_pic18lf2420.X/zb_handle.c
 [v _zb_handle_getStatus zb_handle_getStatus `(E3761  1 e 1 0 ]
-"96
+"97
 [v _zb_handle_setTempRaw zb_handle_setTempRaw `(v  1 e 0 0 ]
-"102
+"104
 [v _zb_handle_setHumidityRaw zb_handle_setHumidityRaw `(v  1 e 0 0 ]
-"108
+"111
 [v _zb_handle_setbatVolt zb_handle_setbatVolt `(v  1 e 0 0 ]
-"114
+"117
 [v _zb_handle_resetStatus zb_handle_resetStatus `(v  1 e 0 0 ]
-"122
+"125
 [v _zb_handle_sendData zb_handle_sendData `(v  1 e 0 0 ]
-"152
+"155
 [v _zigbee_appendChecksum zigbee_appendChecksum `(v  1 s 0 zigbee_appendChecksum ]
-"158
+"161
 [v _zb_handle zb_handle `(v  1 e 0 0 ]
-"265
+"268
 [v _zb_handle_waitAck zb_handle_waitAck `(E3083  1 e 1 0 ]
 "47 /opt/microchip/xc8/v1.33/include/pic18f2420.h
 [v _PORTA PORTA `VEuc  1 e 1 @3968 ]
@@ -462,7 +476,7 @@ TRUE 1
 [v _PIR2bits PIR2bits `VES933  1 e 1 @4001 ]
 "2511
 [v _RCSTA RCSTA `VEuc  1 e 1 @4011 ]
-[s S1663 . 1 `uc 1 RX9D 1 0 :1:0 
+[s S1673 . 1 `uc 1 RX9D 1 0 :1:0 
 `uc 1 OERR 1 0 :1:1 
 `uc 1 FERR 1 0 :1:2 
 `uc 1 ADDEN 1 0 :1:3 
@@ -472,22 +486,22 @@ TRUE 1
 `uc 1 SPEN 1 0 :1:7 
 ]
 "2552
-[s S1672 . 1 `uc 1 . 1 0 :3:0 
+[s S1682 . 1 `uc 1 . 1 0 :3:0 
 `uc 1 ADEN 1 0 :1:3 
 ]
-[s S1675 . 1 `uc 1 . 1 0 :5:0 
+[s S1685 . 1 `uc 1 . 1 0 :5:0 
 `uc 1 SRENA 1 0 :1:5 
 ]
-[s S1678 . 1 `uc 1 . 1 0 :6:0 
+[s S1688 . 1 `uc 1 . 1 0 :6:0 
 `uc 1 RC8_9 1 0 :1:6 
 ]
-[s S1681 . 1 `uc 1 . 1 0 :6:0 
+[s S1691 . 1 `uc 1 . 1 0 :6:0 
 `uc 1 RC9 1 0 :1:6 
 ]
-[s S1684 . 1 `uc 1 RCD8 1 0 :1:0 
+[s S1694 . 1 `uc 1 RCD8 1 0 :1:0 
 ]
-[u S1686 . 1 `S1663 1 . 1 0 `S1672 1 . 1 0 `S1675 1 . 1 0 `S1678 1 . 1 0 `S1681 1 . 1 0 `S1684 1 . 1 0 ]
-[v _RCSTAbits RCSTAbits `VES1686  1 e 1 @4011 ]
+[u S1696 . 1 `S1673 1 . 1 0 `S1682 1 . 1 0 `S1685 1 . 1 0 `S1688 1 . 1 0 `S1691 1 . 1 0 `S1694 1 . 1 0 ]
+[v _RCSTAbits RCSTAbits `VES1696  1 e 1 @4011 ]
 "2720
 [v _TXSTA TXSTA `VEuc  1 e 1 @4012 ]
 [s S1288 . 1 `uc 1 TX9D 1 0 :1:0 
@@ -680,7 +694,7 @@ TRUE 1
 [v _OSCCONbits OSCCONbits `VES696  1 e 1 @4051 ]
 "5457
 [v _T0CON T0CON `VEuc  1 e 1 @4053 ]
-[s S1829 . 1 `uc 1 T0PS 1 0 :3:0 
+[s S1839 . 1 `uc 1 T0PS 1 0 :3:0 
 `uc 1 PSA 1 0 :1:3 
 `uc 1 T0SE 1 0 :1:4 
 `uc 1 T0CS 1 0 :1:5 
@@ -688,15 +702,15 @@ TRUE 1
 `uc 1 TMR0ON 1 0 :1:7 
 ]
 "5480
-[s S1836 . 1 `uc 1 T0PS0 1 0 :1:0 
+[s S1846 . 1 `uc 1 T0PS0 1 0 :1:0 
 `uc 1 T0PS1 1 0 :1:1 
 `uc 1 T0PS2 1 0 :1:2 
 `uc 1 T0PS3 1 0 :1:3 
 `uc 1 . 1 0 :2:4 
 `uc 1 T016BIT 1 0 :1:6 
 ]
-[u S1843 . 1 `S1829 1 . 1 0 `S1836 1 . 1 0 ]
-[v _T0CONbits T0CONbits `VES1843  1 e 1 @4053 ]
+[u S1853 . 1 `S1839 1 . 1 0 `S1846 1 . 1 0 ]
+[v _T0CONbits T0CONbits `VES1853  1 e 1 @4053 ]
 "5539
 [v _TMR0 TMR0 `VEus  1 e 2 @4054 ]
 [s S345 . 1 `uc 1 RBIF 1 0 :1:0 
@@ -742,6 +756,9 @@ TRUE 1
 ]
 [u S385 . 1 `S345 1 . 1 0 `S354 1 . 1 0 `S363 1 . 1 0 `S372 1 . 1 0 `S381 1 . 1 0 ]
 [v _INTCONbits INTCONbits `VES385  1 e 1 @4082 ]
+[s S1907 . 18 `[8]ui 1 data 16 0 `uc 1 offset 1 16 `uc 1 nb 1 17 ]
+"14 /home/mickael/MPLABXProjects/temp_sensor_pic18lf2420.X/filter.c
+[v _filter_data filter_data `[2]S1907  1 s 36 filter_data ]
 "16 /home/mickael/MPLABXProjects/temp_sensor_pic18lf2420.X/hyt221.c
 [v _gData gData `[4]c  1 s 4 gData ]
 "7 /home/mickael/MPLABXProjects/temp_sensor_pic18lf2420.X/i2c.c
@@ -771,22 +788,22 @@ TRUE 1
 [v _UART_errorStatus UART_errorStatus `S1218  1 e 3 0 ]
 "9
 [v _UART_readIndex UART_readIndex `uc  1 s 1 UART_readIndex ]
-"30 /home/mickael/MPLABXProjects/temp_sensor_pic18lf2420.X/zb_handle.c
+"31 /home/mickael/MPLABXProjects/temp_sensor_pic18lf2420.X/zb_handle.c
 [v _zb_frameToSend zb_frameToSend `[33]uc  1 s 33 zb_frameToSend ]
-"70
-[v _zb_frameID zb_frameID `uc  1 s 1 zb_frameID ]
 "71
-[v _zb_counter zb_counter `uc  1 s 1 zb_counter ]
+[v _zb_frameID zb_frameID `uc  1 s 1 zb_frameID ]
 "72
-[v _zb_currentFrameID zb_currentFrameID `uc  1 s 1 zb_currentFrameID ]
+[v _zb_counter zb_counter `uc  1 s 1 zb_counter ]
 "73
+[v _zb_currentFrameID zb_currentFrameID `uc  1 s 1 zb_currentFrameID ]
+"74
 [v _zb_currentAck zb_currentAck `c  1 s 1 zb_currentAck ]
 [s S1452 . 9 `ui 1 tempRaw 2 0 `uc 1 tempStatus 1 2 `ui 1 humidityRaw 2 3 `uc 1 humidityStatus 1 5 `ui 1 battRaw 2 6 `uc 1 battStatus 1 8 ]
-"85
-[v _sensor_data sensor_data `S1452  1 s 9 sensor_data ]
 "86
-[v _zb_status zb_status `E3838  1 s 1 zb_status ]
+[v _sensor_data sensor_data `S1452  1 s 9 sensor_data ]
 "87
+[v _zb_status zb_status `E3838  1 s 1 zb_status ]
+"88
 [v _zb_frameReceived zb_frameReceived `[50]uc  1 s 50 zb_frameReceived ]
 "38 /home/mickael/MPLABXProjects/temp_sensor_pic18lf2420.X/main.c
 [v _main main `(i  1 e 2 0 ]
@@ -802,31 +819,31 @@ TRUE 1
 [v _main_loop main_loop `(v  1 s 0 main_loop ]
 {
 "89
-[v main_loop@hyt221_status hyt221_status `E3779  1 a 1 3 ]
+[v main_loop@hyt221_status hyt221_status `E3779  1 a 1 9 ]
 "88
-[v main_loop@zb_status zb_status `E3761  1 a 1 2 ]
+[v main_loop@zb_status zb_status `E3761  1 a 1 8 ]
 "189
 } 0
-"265 /home/mickael/MPLABXProjects/temp_sensor_pic18lf2420.X/zb_handle.c
+"268 /home/mickael/MPLABXProjects/temp_sensor_pic18lf2420.X/zb_handle.c
 [v _zb_handle_waitAck zb_handle_waitAck `(E3083  1 e 1 0 ]
 {
-"268
+"271
 [v zb_handle_waitAck@bAckReceived bAckReceived `E3195  1 a 1 1 ]
-"267
+"270
 [v zb_handle_waitAck@waitCounter waitCounter `uc  1 a 1 0 ]
-"287
+"290
 } 0
-"158
+"161
 [v _zb_handle zb_handle `(v  1 e 0 0 ]
 {
 [s S1409 . 8 `uc 1 type 1 0 `uc 1 status 1 1 `[2]uc 1 AT 2 2 `*.39uc 1 data 2 4 `uc 1 size 1 6 `uc 1 frameID 1 7 ]
-"162
+"165
 [v zb_handle@decodedFrame decodedFrame `S1409  1 a 8 35 ]
-"161
+"164
 [v zb_handle@sizeOfNextData sizeOfNextData `ui  1 a 2 32 ]
-"160
+"163
 [v zb_handle@bSuccess bSuccess `E3195  1 a 1 34 ]
-"263
+"266
 } 0
 "22 /home/mickael/MPLABXProjects/temp_sensor_pic18lf2420.X/zb.c
 [v _zb_decodage zb_decodage `(E3083  1 e 1 0 ]
@@ -861,31 +878,60 @@ TRUE 1
 {
 "40
 } 0
-"96 /home/mickael/MPLABXProjects/temp_sensor_pic18lf2420.X/zb_handle.c
+"97 /home/mickael/MPLABXProjects/temp_sensor_pic18lf2420.X/zb_handle.c
 [v _zb_handle_setTempRaw zb_handle_setTempRaw `(v  1 e 0 0 ]
 {
-[v zb_handle_setTempRaw@tempRaw tempRaw `ui  1 p 2 22 ]
-"100
-} 0
+[v zb_handle_setTempRaw@tempRaw tempRaw `ui  1 p 2 36 ]
 "102
+} 0
+"104
 [v _zb_handle_setHumidityRaw zb_handle_setHumidityRaw `(v  1 e 0 0 ]
 {
-[v zb_handle_setHumidityRaw@humidityRaw humidityRaw `ui  1 p 2 20 ]
-"106
+[v zb_handle_setHumidityRaw@humidityRaw humidityRaw `ui  1 p 2 36 ]
+"109
 } 0
-"122
+"16 /home/mickael/MPLABXProjects/temp_sensor_pic18lf2420.X/filter.c
+[v _filter filter `(ui  1 e 2 0 ]
+{
+[v filter@id id `E29  1 a 1 wreg ]
+"35
+[v filter@i i `uc  1 a 1 6 ]
+"19
+[v filter@sum sum `ul  1 a 4 2 ]
+"18
+[v filter@filtered filtered `ui  1 a 2 0 ]
+"16
+[v filter@id id `E29  1 a 1 wreg ]
+[v filter@value value `ui  1 p 2 29 ]
+"19
+[v filter@id id `E29  1 a 1 7 ]
+"68
+} 0
+"8 /opt/microchip/xc8/v1.33/sources/common/lldiv.c
+[v ___lldiv __lldiv `(ul  1 e 4 0 ]
+{
+"11
+[v ___lldiv@quotient quotient `ul  1 a 4 24 ]
+"12
+[v ___lldiv@counter counter `uc  1 a 1 28 ]
+"8
+[v ___lldiv@dividend dividend `ul  1 p 4 16 ]
+[v ___lldiv@divisor divisor `ul  1 p 4 20 ]
+"31
+} 0
+"125 /home/mickael/MPLABXProjects/temp_sensor_pic18lf2420.X/zb_handle.c
 [v _zb_handle_sendData zb_handle_sendData `(v  1 e 0 0 ]
 {
-"146
-[v zb_handle_sendData@frameSize frameSize `uc  1 a 1 31 ]
 "149
-} 0
+[v zb_handle_sendData@frameSize frameSize `uc  1 a 1 31 ]
 "152
+} 0
+"155
 [v _zigbee_appendChecksum zigbee_appendChecksum `(v  1 s 0 zigbee_appendChecksum ]
 {
 [v zigbee_appendChecksum@buffer buffer `*.39uc  1 p 2 21 ]
 [v zigbee_appendChecksum@sizeFrame sizeFrame `*.39uc  1 p 2 23 ]
-"156
+"159
 } 0
 "9 /home/mickael/MPLABXProjects/temp_sensor_pic18lf2420.X/zb.c
 [v _zb_doChecksum zb_doChecksum `(uc  1 e 1 0 ]
@@ -914,15 +960,15 @@ TRUE 1
 [v uart_write@size size `uc  1 a 1 20 ]
 "42
 } 0
-"114 /home/mickael/MPLABXProjects/temp_sensor_pic18lf2420.X/zb_handle.c
+"117 /home/mickael/MPLABXProjects/temp_sensor_pic18lf2420.X/zb_handle.c
 [v _zb_handle_resetStatus zb_handle_resetStatus `(v  1 e 0 0 ]
 {
-"119
+"122
 } 0
-"91
+"92
 [v _zb_handle_getStatus zb_handle_getStatus `(E3761  1 e 1 0 ]
 {
-"94
+"95
 } 0
 "11 /home/mickael/MPLABXProjects/temp_sensor_pic18lf2420.X/timer.c
 [v _timer0_wait_65ms timer0_wait_65ms `(v  1 e 0 0 ]
@@ -1002,11 +1048,11 @@ TRUE 1
 {
 "209
 } 0
-"108 /home/mickael/MPLABXProjects/temp_sensor_pic18lf2420.X/zb_handle.c
+"111 /home/mickael/MPLABXProjects/temp_sensor_pic18lf2420.X/zb_handle.c
 [v _zb_handle_setbatVolt zb_handle_setbatVolt `(v  1 e 0 0 ]
 {
 [v zb_handle_setbatVolt@battVoltage battVoltage `ui  1 p 2 16 ]
-"112
+"115
 } 0
 "9 /home/mickael/MPLABXProjects/temp_sensor_pic18lf2420.X/i2c.c
 [v _i2c_setup i2c_setup `(v  1 e 0 0 ]
