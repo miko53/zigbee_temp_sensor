@@ -10,7 +10,8 @@
 #include "osc.h"
 #include "timer.h"
 
-#define     BATT_COUNTER_MAX    (60) //number of deep sleep around 1hour
+#define     BATT_COUNTER_MAX      (60) //number of deep sleep around 1hour
+#define     ZB_JOINED_COUNTER_MAX (50) //around 26s
 
 typedef enum
 {
@@ -23,6 +24,7 @@ typedef enum
   LAUNCH_ACQ,
   SLEEP,
   WAIT_HYT221_ACQ,
+  SEND_DATA,
 } main_stateT;
 
 static zb_stateT zb_state;
@@ -77,6 +79,7 @@ int main(void)
   INTCONbits.PEIE = 1; //activate peripherical interrupt
   INTCONbits.GIE = 1; //activate global interrupt
 
+  XBEE_WAKE_UP();
   XBEE_RESET_ON();
   XBEE_RESET_OFF();
 
@@ -90,10 +93,11 @@ static void main_loop()
 
   batt_counter = BATT_COUNTER_MAX;
   wait_join_counter = 0;
+
   zb_state = NOT_JOINED;
   main_state = LAUNCH_ACQ;
 
-  leds_green_glitch();
+  leds_glitch(LED_RED);
 
   while (1)
   {
@@ -103,7 +107,9 @@ static void main_loop()
     {
       case ZB_STATUS_NOT_JOINED:
         zb_state = NOT_JOINED;
-        leds_yellow_glitch();
+        main_state = LAUNCH_ACQ;
+        XBEE_WAKE_UP(); //just in case receiving NOT_JOINED but go to sleep, must be not occurs...
+        leds_glitch(LED_YELLOW);
         timer0_wait_262ms();
         timer0_wait_262ms();
         break;
@@ -112,12 +118,21 @@ static void main_loop()
         zb_state = JOINED;
         break;
 
-      case ZB_STATUS_IN_ERROR:
       default:
-        zb_state = NOT_JOINED;
-        leds_red_glitch();
-        RESET();
         break;
+        /*
+        case ZB_STATUS_ACK_ERROR:
+        case ZB_STATUS_IN_ERROR:
+        default:
+        zb_state = NOT_JOINED;
+        main_state = LAUNCH_ACQ;
+        leds_red_glitch();
+        zb_handle_ackError();
+        XBEE_WAKE_UP();
+        XBEE_RESET_ON();
+        NOP();
+        XBEE_RESET_OFF();
+        break;*/
     }
 
     switch (zb_state)
@@ -140,6 +155,10 @@ static void main_loop()
             {
               main_state = WAIT_HYT221_ACQ;
             }
+            else
+            {
+              leds_glitch(LED_GREEN | LED_YELLOW);
+            }
             break;
 
           case WAIT_HYT221_ACQ:
@@ -148,21 +167,43 @@ static void main_loop()
             if (hyt221_status == STATUS_OK)
             {
               XBEE_WAKE_UP(); //XBee end of sleep request
-              //prepare and send data
-              zb_handle_setTempRaw(hyt221_getTemp());
-              zb_handle_setHumidityRaw(hyt221_getHumidity());
-              zb_handle_sendData();
-              zb_handle_waitAck();
-              XBEE_SLEEP_RQ(); //XBee sleep request
-              main_state = SLEEP;
+              timer0_wait_262ms(); //waiting Xbee poll request and reply
+              main_state = SEND_DATA;
             }
             else if (hyt221_status == STATUS_ERROR)
             {
-              leds_red_glitch();
+              leds_glitch(LED_RED);
+              main_state = LAUNCH_ACQ;
+            }
+            //default case not written
+            //keep in state to wait and retry
+            break;
+
+          case SEND_DATA:
+            //prepare and send data
+            zb_handle_setTempRaw(hyt221_getTemp());
+            zb_handle_setHumidityRaw(hyt221_getHumidity());
+            zb_handle_sendData();
+
+            BOOL bAckReceived;
+            bAckReceived = zb_handle_waitAck();
+            if (bAckReceived == TRUE)
+            {
+              main_state = SLEEP;
+            }
+            else
+            {
+              leds_glitch(LED_YELLOW | LED_GREEN);
+              XBEE_RESET_ON();
+              NOP();
+              XBEE_RESET_OFF();
+              //for(uint8_t i = 0; i < 50; i++)
+              //    timer0_wait_262ms();
             }
             break;
 
           case SLEEP:
+            XBEE_SLEEP_RQ(); //XBee sleep request
             //sleep around 1min
             DEEP_SLEEP();
             main_state = LAUNCH_ACQ;
@@ -177,12 +218,14 @@ static void main_loop()
       case NOT_JOINED:
       default:
         wait_join_counter++;
-        if (wait_join_counter >= 50)
+        if (wait_join_counter >= ZB_JOINED_COUNTER_MAX)
         {
           wait_join_counter = 0;
-          RESET();
+          leds_glitch(LED_GREEN);
+          XBEE_RESET_ON();
+          NOP();
+          XBEE_RESET_OFF();
         }
-        main_state = LAUNCH_ACQ;
         break;
     }
   }
@@ -200,7 +243,9 @@ static void batt_launch_acq()
   IDLE_SLEEP();
 
   while ((ADCON0 & 0x02) == 0x02)
-    ;
+  {
+    NOP();
+  }
 
   batt_value = (ADRESH << 8) | ADRESL;
   LATBbits.LATB1 = 0; //desactivate batt_sensor

@@ -12,11 +12,11 @@
 extern "C" {
 #endif
 
-extern void leds_red_glitch(void);
-extern void leds_yellow_glitch(void);
-extern void leds_green_glitch(void);
-extern void leds_red_and_yellow_glitch();
-extern void leds_green_and_yellow_glitch();
+#define     LED_YELLOW      (0x04)
+#define     LED_RED         (0x08)
+#define     LED_GREEN       (0x10)
+
+extern void leds_glitch(uint8_t leds);
 
 #ifdef	__cplusplus
 }

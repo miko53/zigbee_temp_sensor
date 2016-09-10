@@ -13,7 +13,7 @@
 //static uint16_t humidity_raw;
 //static uint16_t temp_raw;
 
-static int8_t gData[4];
+static uint8_t gData[4];
 //static int32_t nbStale;
 
 
@@ -30,7 +30,7 @@ STATUS_T hyt221_launch_acq()
   //if the device doesn't respond, indicate error with RED led
   if (SSPCON2bits.ACKSTAT == 1)
   {
-    leds_red_and_yellow_glitch();
+    leds_glitch(LED_RED | LED_YELLOW);
     return STATUS_ERROR;
   }
 
@@ -57,7 +57,7 @@ STATUS_T hyt221_operation()
   //read ACK
   if (SSPCON2bits.ACKSTAT == 1)
   {
-    leds_red_and_yellow_glitch();
+    leds_glitch(LED_RED | LED_YELLOW);
     i2c_trig_stop();
     return STATUS_ERROR;
   }
@@ -118,9 +118,7 @@ STATUS_T hyt221_operation()
 uint16_t hyt221_getTemp()
 {
   uint16_t temp_raw;
-  temp_raw = gData[2];
-  temp_raw = temp_raw << 8;
-  temp_raw += gData[3];
+  temp_raw = ((uint16_t) gData[2]) << 8 | (uint16_t) gData[3];
   temp_raw = temp_raw >> 2;
   return temp_raw;
 }
@@ -128,10 +126,7 @@ uint16_t hyt221_getTemp()
 uint16_t hyt221_getHumidity()
 {
   uint16_t humidity_raw;
-  humidity_raw = (gData[0] & 0x3F);
-  humidity_raw = humidity_raw << 8;
-  humidity_raw += gData[1];
-
+  humidity_raw = ((uint16_t) (gData[0] & 0x3F)) << 8 | gData[1];
   return humidity_raw;
 }
 

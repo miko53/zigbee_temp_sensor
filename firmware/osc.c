@@ -69,11 +69,11 @@ void calibration(void)
   {
     OSCTUNE = 0;
     __delay_us(300);
-    leds_red_glitch();
+    leds_glitch(LED_RED);
     __delay_ms(250);
-    leds_red_glitch();
+    leds_glitch(LED_RED);
     __delay_ms(250);
-    leds_red_glitch();
+    leds_glitch(LED_RED);
   }
 
   //OSCCON  = 0x40;

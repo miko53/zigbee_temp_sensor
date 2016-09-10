@@ -34,10 +34,13 @@ void uart_write(uint8_t size, uint8_t* buffer)
   for (i = 0; i < size; i++)
   {
     TXREG = buffer[i];
-    while (!TXSTAbits.TRMT)
-      ;
+    while (TXSTAbits.TRMT == 0)
+    {
+      NOP();
+    }
     b++;
   }
+
   NOP(); //add not to correctly send the last byte before to go to sleep
 }
 

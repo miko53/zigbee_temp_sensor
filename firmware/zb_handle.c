@@ -5,7 +5,6 @@
 #include "zb.h"
 #include "leds.h"
 #include "timer.h"
-#include "filter.h"
 
 #define MAX_SIZE_FRAME                (50)
 
@@ -96,14 +95,12 @@ zb_statusT zb_handle_getStatus(void)
 
 void zb_handle_setTempRaw(uint16_t tempRaw)
 {
-  tempRaw = filter(TEMPERATURE_ID, tempRaw);
   sensor_data.tempRaw = tempRaw;
   sensor_data.tempStatus = STATUS_NORMAL_DATA;
 }
 
 void zb_handle_setHumidityRaw(uint16_t humidityRaw)
 {
-  humidityRaw = filter(HUMIDITY_ID, humidityRaw);
   sensor_data.humidityRaw = humidityRaw;
   sensor_data.humidityStatus = STATUS_NORMAL_DATA;
 }
@@ -148,6 +145,7 @@ void zb_handle_sendData()
 
   uint8_t frameSize = sizeof(zb_frameToSend) - 1;
   zigbee_appendChecksum(zb_frameToSend, &frameSize);
+
   uart_write(frameSize, zb_frameToSend);
 }
 
@@ -207,17 +205,12 @@ void zb_handle(void)
         if (decodedFrame.status == 0x02)
         {
           zb_status = ZB_STATUS_JOINED;
-          //leds_green_glitch();
+          leds_glitch(LED_GREEN);
         }
-        else if (decodedFrame.status > 0x03)
-        {
-          zb_status = ZB_STATUS_IN_ERROR;
-          //leds_red_glitch();
-        }
-        else
+        else if (decodedFrame.status == 0x03)
         {
           zb_status = ZB_STATUS_NOT_JOINED;
-          //leds_yellow_glitch();
+          leds_glitch(LED_RED | LED_YELLOW | LED_GREEN);
         }
         break;
 
@@ -226,16 +219,6 @@ void zb_handle(void)
         {
           zb_currentAck = decodedFrame.status;
         }
-#if 0
-        if (decodedFrame.status != 0)
-        {
-          leds_red_glitch();
-        }
-        else
-        {
-          leds_green_glitch();
-        }
-#endif
         break;
 
       case ZIGBEE_RECEIVE_PACKET:
@@ -245,37 +228,20 @@ void zb_handle(void)
         break;
     }
   }
-  /*
-      switch (zb_status)
-      {
-          case ZB_STATUS_NOT_JOINED:
-              led_red_ON();
-              break;
-
-          case ZB_STATUS_JOINED:
-              led_red_OFF();
-              led_yellow_ON();
-              break;
-
-          case ZB_STATUS_IN_ERROR:
-          default:
-
-              break;
-      }
-  */
 }
 
 BOOL zb_handle_waitAck(void)
 {
-  uint8_t waitCounter;
+  uint8_t retryCounter;
   BOOL bAckReceived;
 
   bAckReceived = FALSE;
-  waitCounter = 0;
+  retryCounter = 0;
 
-  while ((waitCounter < 8) && (bAckReceived == FALSE))
+  //5
+  //19 max retry = 3 --> 4.8s
+  while ((retryCounter < 19) && (bAckReceived == FALSE))
   {
-    timer0_wait_262ms(); //wait end of transmission
     zb_handle();
     if (zb_currentAck == 0)
     {
@@ -283,7 +249,8 @@ BOOL zb_handle_waitAck(void)
       //      leds_green_glitch();
     }
 
-    waitCounter++;
+    timer0_wait_262ms(); //wait end of transmission
+    retryCounter++;
   }
 
   return bAckReceived;

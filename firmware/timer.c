@@ -16,7 +16,7 @@ void timer0_wait_65ms(void)
   INTCONbits.TMR0IE = 1; //active TIMER0 interupt.
   T0CONbits.TMR0ON = 1;// enable timer
 
-  IDLE_SLEEP();//TODO check that end of idle mode on IT timer
+  IDLE_SLEEP();
   timer0_wait_ready();
 
   T0CONbits.TMR0ON = 0; //stop timer
@@ -31,7 +31,7 @@ void timer0_wait_262ms(void)
   INTCONbits.TMR0IF = 0;
   INTCONbits.TMR0IE = 1; //active TIMER0 interrupt.
   T0CONbits.TMR0ON = 1;
-  IDLE_SLEEP();//TODO check that end of idle mode on IT timer
+  IDLE_SLEEP();
   timer0_wait_ready();
   T0CONbits.TMR0ON = 0; //stop timer
   INTCONbits.TMR0IE = 0;

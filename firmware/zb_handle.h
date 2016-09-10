@@ -24,7 +24,6 @@ typedef enum
 {
   ZB_STATUS_NOT_JOINED,
   ZB_STATUS_JOINED,
-  ZB_STATUS_IN_ERROR
 } zb_statusT;
 
 extern void zb_handle(void);
@@ -35,7 +34,6 @@ extern void zb_handle_setTempRaw(uint16_t tempRaw);
 extern void zb_handle_setHumidityRaw(uint16_t humidityRaw);
 extern void zb_handle_setbatVolt(uint16_t battVoltage);
 extern void zb_handle_resetStatus();
-
 
 #ifdef	__cplusplus
 }
