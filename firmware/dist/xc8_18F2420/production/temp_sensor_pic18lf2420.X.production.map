@@ -5,7 +5,7 @@ Linker command line:
 --edf=/opt/microchip/xc8/v1.33/dat/en_msgs.txt -cs \
   -h+dist/xc8_18F2420/production/temp_sensor_pic18lf2420.X.production.sym \
   --cmf=dist/xc8_18F2420/production/temp_sensor_pic18lf2420.X.production.cmf \
-  -z -Q18F2420 -o/tmp/cgtWWDkmh \
+  -z -Q18F2420 -o/tmp/cgtiKlZtv \
   -Mdist/xc8_18F2420/production/temp_sensor_pic18lf2420.X.production.map \
   -E1 -ver=XC8 -ASTACK=0E9h-02ffh -pstack=STACK -ACODE=00h-03FFFh \
   -ACONST=00h-03FFFh -ASMALLCONST=0300h-03FFhx61 -AMEDIUMCONST=0300h-03FFFh \
@@ -20,7 +20,7 @@ Linker command line:
   -prdata=COMRAM,nvrram=COMRAM,nvbit=COMRAM,rbss=COMRAM,rbit=COMRAM \
   -pfarbss=FARRAM,fardata=FARRAM,nvFARRAM=FARRAM \
   -pintsave_regs=BIGRAM,bigbss=BIGRAM,bigdata=BIGRAM -pbss=RAM \
-  -pidata=CODE,irdata=CODE,ibigdata=CODE,ifardata=CODE /tmp/cgtk3JI31.obj \
+  -pidata=CODE,irdata=CODE,ibigdata=CODE,ifardata=CODE /tmp/cgtyGcrle.obj \
   dist/xc8_18F2420/production/temp_sensor_pic18lf2420.X.production.obj 
 
 Object code version is 3.11
@@ -33,52 +33,52 @@ Call graph: (short form)
 
 
                 Name                               Link     Load   Length Selector   Space Scale
-/tmp/cgtk3JI31.obj
+/tmp/cgtyGcrle.obj
                 end_init                             18       18        4        4       0
                 reset_vec                             0        0        4        0       0
                 idloc                            200000   200000        8   200000       0
                 config                           300000   300000        E   300000       0
 dist/xc8_18F2420/production/temp_sensor_pic18lf2420.X.production.obj
                 intcode                               8        8       10        4       0
-                intcode_body                        33C      33C      13E        4       0
-                text30                              A86      A86       1E        4       0
-                text29                              55A      55A       C6        4       0
-                text28                              952      952       30        4       0
-                text27                              B16      B16        E        4       0
-                text26                              84E      84E       48        4       0
-                text25                              AA4      AA4       14        4       0
-                text24                              982      982       2E        4       0
-                text23                              ADC      ADC       10        4       0
-                text22                              ACA      ACA       12        4       0
-                text21                              B24      B24        C        4       0
-                text20                              B30      B30        8        4       0
-                text19                              9DA      9DA       28        4       0
-                text18                              620      620       94        4       0
-                text17                              AB8      AB8       12        4       0
-                text16                              A46      A46       22        4       0
-                text15                              B38      B38        4        4       0
-                text14                              B08      B08        E        4       0
-                text13                              8D8      8D8       3E        4       0
-                text12                              9B0      9B0       2A        4       0
-                text11                              7A0      7A0       5A        4       0
-                text10                              6B4      6B4       8C        4       0
-                text9                               AFA      AFA        E        4       0
-                text8                               AEC      AEC        E        4       0
-                text7                               A24      A24       22        4       0
-                text6                               740      740       60        4       0
+                intcode_body                        344      344      13E        4       0
+                text30                              A8E      A8E       1E        4       0
+                text29                              562      562       C6        4       0
+                text28                              95A      95A       30        4       0
+                text27                              B1E      B1E        E        4       0
+                text26                              856      856       48        4       0
+                text25                              AAC      AAC       14        4       0
+                text24                              98A      98A       2E        4       0
+                text23                              AE4      AE4       10        4       0
+                text22                              AD2      AD2       12        4       0
+                text21                              B2C      B2C        C        4       0
+                text20                              B38      B38        8        4       0
+                text19                              9E2      9E2       28        4       0
+                text18                              628      628       94        4       0
+                text17                              AC0      AC0       12        4       0
+                text16                              A4E      A4E       22        4       0
+                text15                              B40      B40        4        4       0
+                text14                              B10      B10        E        4       0
+                text13                              8E0      8E0       3E        4       0
+                text12                              9B8      9B8       2A        4       0
+                text11                              7A8      7A8       5A        4       0
+                text10                              6BC      6BC       8C        4       0
+                text9                               B02      B02        E        4       0
+                text8                               AF4      AF4        E        4       0
+                text7                               A2C      A2C       22        4       0
+                text6                               748      748       60        4       0
                 text5                                1C       1C      1B8        4       0
-                text4                               47A      47A       E0        4       0
-                text3                               916      916       3C        4       0
-                text2                               1D4      1D4      168        4       0
-                text1                               A68      A68       1E        4       0
-                text0                               7FA      7FA       54        4       0
+                text4                               482      482       E0        4       0
+                text3                               91E      91E       3C        4       0
+                text2                               1D4      1D4      170        4       0
+                text1                               A70      A70       1E        4       0
+                text0                               802      802       54        4       0
                 cstackCOMRAM                          1        1       2B        1       1
                 cstackBANK0                          E4       E4        5       80       1
                 bssBANK0                             80       80       64       80       1
                 dataCOMRAM                           4E       4E       22        1       1
                 bssCOMRAM                            2C       2C       22        1       1
-                cinit                               896      896       42        4       0
-                idataCOMRAM                         A02      A02       22        4       0
+                cinit                               89E      89E       42        4       0
+                idataCOMRAM                         A0A      A0A       22        4       0
 
 TOTAL           Name                               Link     Load   Length     Space
         CLASS   STACK          
@@ -87,40 +87,40 @@ TOTAL           Name                               Link     Load   Length     Sp
                 end_init                             18       18        4         0
                 intcode                               8        8       10         0
                 reset_vec                             0        0        4         0
-                intcode_body                        33C      33C      13E         0
-                text30                              A86      A86       1E         0
-                text29                              55A      55A       C6         0
-                text28                              952      952       30         0
-                text27                              B16      B16        E         0
-                text26                              84E      84E       48         0
-                text25                              AA4      AA4       14         0
-                text24                              982      982       2E         0
-                text23                              ADC      ADC       10         0
-                text22                              ACA      ACA       12         0
-                text21                              B24      B24        C         0
-                text20                              B30      B30        8         0
-                text19                              9DA      9DA       28         0
-                text18                              620      620       94         0
-                text17                              AB8      AB8       12         0
-                text16                              A46      A46       22         0
-                text15                              B38      B38        4         0
-                text14                              B08      B08        E         0
-                text13                              8D8      8D8       3E         0
-                text12                              9B0      9B0       2A         0
-                text11                              7A0      7A0       5A         0
-                text10                              6B4      6B4       8C         0
-                text9                               AFA      AFA        E         0
-                text8                               AEC      AEC        E         0
-                text7                               A24      A24       22         0
-                text6                               740      740       60         0
+                intcode_body                        344      344      13E         0
+                text30                              A8E      A8E       1E         0
+                text29                              562      562       C6         0
+                text28                              95A      95A       30         0
+                text27                              B1E      B1E        E         0
+                text26                              856      856       48         0
+                text25                              AAC      AAC       14         0
+                text24                              98A      98A       2E         0
+                text23                              AE4      AE4       10         0
+                text22                              AD2      AD2       12         0
+                text21                              B2C      B2C        C         0
+                text20                              B38      B38        8         0
+                text19                              9E2      9E2       28         0
+                text18                              628      628       94         0
+                text17                              AC0      AC0       12         0
+                text16                              A4E      A4E       22         0
+                text15                              B40      B40        4         0
+                text14                              B10      B10        E         0
+                text13                              8E0      8E0       3E         0
+                text12                              9B8      9B8       2A         0
+                text11                              7A8      7A8       5A         0
+                text10                              6BC      6BC       8C         0
+                text9                               B02      B02        E         0
+                text8                               AF4      AF4        E         0
+                text7                               A2C      A2C       22         0
+                text6                               748      748       60         0
                 text5                                1C       1C      1B8         0
-                text4                               47A      47A       E0         0
-                text3                               916      916       3C         0
-                text2                               1D4      1D4      168         0
-                text1                               A68      A68       1E         0
-                text0                               7FA      7FA       54         0
-                cinit                               896      896       42         0
-                idataCOMRAM                         A02      A02       22         0
+                text4                               482      482       E0         0
+                text3                               91E      91E       3C         0
+                text2                               1D4      1D4      170         0
+                text1                               A70      A70       1E         0
+                text0                               802      802       54         0
+                cinit                               89E      89E       42         0
+                idataCOMRAM                         A0A      A0A       22         0
 
         CLASS   CONST          
 
@@ -165,7 +165,7 @@ SEGMENTS        Name                           Load    Length   Top    Selector 
 
                 reset_vec                      000000  000004  000004         0       0  CODE    
                 cstackCOMRAM                   000001  00006F  000070         1       1  COMRAM  
-                intcode                        000008  000B34  000B3C         4       0  CODE    
+                intcode                        000008  000B3C  000B44         4       0  CODE    
                 bssBANK0                       000080  000069  0000E9        80       1  BANK0   
                 idloc                          200000  000008  200008    200000       0  IDLOC   
                 config                         300000  00000E  30000E    300000       0  CONFIG  
@@ -180,15 +180,15 @@ UNUSED ADDRESS RANGES
         BIGRAM           000070-00007F               10
                          0000E9-0002FF              217
         CODE             000004-000007                4
-                         000B3C-003FFF             34C4
+                         000B44-003FFF             34BC
         COMRAM           000070-00007F               10
         CONST            000004-000007                4
-                         000B3C-003FFF             34C4
+                         000B44-003FFF             34BC
         EEDATA           F00000-F000FF              100
-        MEDIUMCONST      000B3C-003FFF             34C4
+        MEDIUMCONST      000B44-003FFF             34BC
         RAM              0000E9-0002FF              100
         SFR              000F80-000FFF               80
-        SMALLCONST       000B3C-003FFF              100
+        SMALLCONST       000B44-003FFF              100
         STACK            0000E9-0002FF              217
 
                                   Symbol Table
@@ -462,81 +462,81 @@ ___intlo_sp                          stack        000000
 ___sp                                stack        000000
 __accesstop                          (abs)        000080
 __activetblptr                       (abs)        000002
-__end_of__initialization             cinit        0008CE
-__end_of_batt_launch_acq             text26       000896
-__end_of_calibration                 text29       000620
-__end_of_hyt221_getHumidity          text25       000AB8
-__end_of_hyt221_getTemp              text24       0009B0
-__end_of_hyt221_launch_acq           text19       000A02
-__end_of_hyt221_operation            text18       0006B4
-__end_of_i2c_setup                   text28       000982
-__end_of_i2c_trig_start              text21       000B30
-__end_of_i2c_trig_stop               text20       000B38
-__end_of_i2c_wait_idle               text23       000AEC
-__end_of_i2c_wait_ready              text22       000ADC
-__end_of_isr_hi                      intcode_body 00047A
-__end_of_leds_glitch                 text30       000AA4
-__end_of_main                        text0        00084E
-__end_of_main_loop                   text2        00033C
-__end_of_timer0_wait_262ms           text7        000A46
-__end_of_timer0_wait_65ms            text16       000A68
-__end_of_timer0_wait_ready           text17       000ACA
-__end_of_uart_read                   text6        0007A0
-__end_of_uart_setup                  text1        000A86
-__end_of_uart_write                  text13       000916
+__end_of__initialization             cinit        0008D6
+__end_of_batt_launch_acq             text26       00089E
+__end_of_calibration                 text29       000628
+__end_of_hyt221_getHumidity          text25       000AC0
+__end_of_hyt221_getTemp              text24       0009B8
+__end_of_hyt221_launch_acq           text19       000A0A
+__end_of_hyt221_operation            text18       0006BC
+__end_of_i2c_setup                   text28       00098A
+__end_of_i2c_trig_start              text21       000B38
+__end_of_i2c_trig_stop               text20       000B40
+__end_of_i2c_wait_idle               text23       000AF4
+__end_of_i2c_wait_ready              text22       000AE4
+__end_of_isr_hi                      intcode_body 000482
+__end_of_leds_glitch                 text30       000AAC
+__end_of_main                        text0        000856
+__end_of_main_loop                   text2        000344
+__end_of_timer0_wait_262ms           text7        000A4E
+__end_of_timer0_wait_65ms            text16       000A70
+__end_of_timer0_wait_ready           text17       000AD2
+__end_of_uart_read                   text6        0007A8
+__end_of_uart_setup                  text1        000A8E
+__end_of_uart_write                  text13       00091E
 __end_of_zb_decodage                 text5        0001D4
-__end_of_zb_doChecksum               text12       0009DA
-__end_of_zb_handle                   text4        00055A
-__end_of_zb_handle_getStatus         text15       000B3C
-__end_of_zb_handle_resetStatus       text14       000B16
-__end_of_zb_handle_sendData          text10       000740
-__end_of_zb_handle_setHumidityRaw    text9        000B08
-__end_of_zb_handle_setTempRaw        text8        000AFA
-__end_of_zb_handle_setbatVolt        text27       000B24
-__end_of_zb_handle_waitAck           text3        000952
-__end_of_zigbee_appendChecksum       text11       0007FA
-__initialization                     cinit        000896
+__end_of_zb_doChecksum               text12       0009E2
+__end_of_zb_handle                   text4        000562
+__end_of_zb_handle_getStatus         text15       000B44
+__end_of_zb_handle_resetStatus       text14       000B1E
+__end_of_zb_handle_sendData          text10       000748
+__end_of_zb_handle_setHumidityRaw    text9        000B10
+__end_of_zb_handle_setTempRaw        text8        000B02
+__end_of_zb_handle_setbatVolt        text27       000B2C
+__end_of_zb_handle_waitAck           text3        00095A
+__end_of_zigbee_appendChecksum       text11       000802
+__initialization                     cinit        00089E
 __mediumconst                        mediumconst  000000
 __pbssBANK0                          bssBANK0     000080
 __pbssCOMRAM                         bssCOMRAM    00002C
-__pcinit                             cinit        000896
+__pcinit                             cinit        00089E
 __pcstackBANK0                       cstackBANK0  0000E4
 __pcstackCOMRAM                      cstackCOMRAM 000001
 __pdataCOMRAM                        dataCOMRAM   00004E
-__pidataCOMRAM                       idataCOMRAM  000A02
+__pidataCOMRAM                       idataCOMRAM  000A0A
 __pintcode                           intcode      000008
-__pintcode_body                      intcode_body 00033C
-__ptext0                             text0        0007FA
-__ptext1                             text1        000A68
-__ptext10                            text10       0006B4
-__ptext11                            text11       0007A0
-__ptext12                            text12       0009B0
-__ptext13                            text13       0008D8
-__ptext14                            text14       000B08
-__ptext15                            text15       000B38
-__ptext16                            text16       000A46
-__ptext17                            text17       000AB8
-__ptext18                            text18       000620
-__ptext19                            text19       0009DA
+__pintcode_body                      intcode_body 000344
+__ptext0                             text0        000802
+__ptext1                             text1        000A70
+__ptext10                            text10       0006BC
+__ptext11                            text11       0007A8
+__ptext12                            text12       0009B8
+__ptext13                            text13       0008E0
+__ptext14                            text14       000B10
+__ptext15                            text15       000B40
+__ptext16                            text16       000A4E
+__ptext17                            text17       000AC0
+__ptext18                            text18       000628
+__ptext19                            text19       0009E2
 __ptext2                             text2        0001D4
-__ptext20                            text20       000B30
-__ptext21                            text21       000B24
-__ptext22                            text22       000ACA
-__ptext23                            text23       000ADC
-__ptext24                            text24       000982
-__ptext25                            text25       000AA4
-__ptext26                            text26       00084E
-__ptext27                            text27       000B16
-__ptext28                            text28       000952
-__ptext29                            text29       00055A
-__ptext3                             text3        000916
-__ptext30                            text30       000A86
-__ptext4                             text4        00047A
+__ptext20                            text20       000B38
+__ptext21                            text21       000B2C
+__ptext22                            text22       000AD2
+__ptext23                            text23       000AE4
+__ptext24                            text24       00098A
+__ptext25                            text25       000AAC
+__ptext26                            text26       000856
+__ptext27                            text27       000B1E
+__ptext28                            text28       00095A
+__ptext29                            text29       000562
+__ptext3                             text3        00091E
+__ptext30                            text30       000A8E
+__ptext4                             text4        000482
 __ptext5                             text5        00001C
-__ptext6                             text6        000740
-__ptext7                             text7        000A24
-__ptext8                             text8        000AEC
-__ptext9                             text9        000AFA
+__ptext6                             text6        000748
+__ptext7                             text7        000A2C
+__ptext8                             text8        000AF4
+__ptext9                             text9        000B02
 __ramtop                             ramtop       000300
 __size_of_batt_launch_acq            (abs)        000000
 __size_of_calibration                (abs)        000000
@@ -572,62 +572,62 @@ __size_of_zb_handle_waitAck          (abs)        000000
 __size_of_zigbee_appendChecksum      (abs)        000000
 __smallconst                         smallconst   000000
 _batt_counter                        bssCOMRAM    00003C
-_batt_launch_acq                     text26       00084E
+_batt_launch_acq                     text26       000856
 _batt_value                          bssCOMRAM    00003F
 _calibr                              bssCOMRAM    000044
-_calibration                         text29       00055A
+_calibration                         text29       000562
 _gData                               bssCOMRAM    000035
-_hyt221_getHumidity                  text25       000AA4
-_hyt221_getTemp                      text24       000982
-_hyt221_launch_acq                   text19       0009DA
-_hyt221_operation                    text18       000620
+_hyt221_getHumidity                  text25       000AAC
+_hyt221_getTemp                      text24       00098A
+_hyt221_launch_acq                   text19       0009E2
+_hyt221_operation                    text18       000628
 _i2c_interupt_done                   bssCOMRAM    000045
-_i2c_setup                           text28       000952
-_i2c_trig_start                      text21       000B24
-_i2c_trig_stop                       text20       000B30
-_i2c_wait_idle                       text23       000ADC
-_i2c_wait_ready                      text22       000ACA
+_i2c_setup                           text28       00095A
+_i2c_trig_start                      text21       000B2C
+_i2c_trig_stop                       text20       000B38
+_i2c_wait_idle                       text23       000AE4
+_i2c_wait_ready                      text22       000AD2
 _isr_hi                              intcode      000008
-_leds_glitch                         text30       000A86
-_main                                text0        0007FA
+_leds_glitch                         text30       000A8E
+_main                                text0        000802
 _main_loop                           text2        0001D4
 _main_state                          bssCOMRAM    000046
 _sensor_data                         bssCOMRAM    00002C
 _timer0_interupt_done                bssCOMRAM    000047
-_timer0_wait_262ms                   text7        000A24
-_timer0_wait_65ms                    text16       000A46
-_timer0_wait_ready                   text17       000AB8
-_uart_read                           text6        000740
-_uart_setup                          text1        000A68
-_uart_write                          text13       0008D8
+_timer0_wait_262ms                   text7        000A2C
+_timer0_wait_65ms                    text16       000A4E
+_timer0_wait_ready                   text17       000AC0
+_uart_read                           text6        000748
+_uart_setup                          text1        000A70
+_uart_write                          text13       0008E0
 _wait_join_counter                   bssCOMRAM    000048
 _zb_counter                          bssCOMRAM    000049
 _zb_currentAck                       bssCOMRAM    00004A
 _zb_currentFrameID                   bssCOMRAM    00004B
 _zb_decodage                         text5        00001C
-_zb_doChecksum                       text12       0009B0
+_zb_doChecksum                       text12       0009B8
 _zb_frameID                          dataCOMRAM   00004E
 _zb_frameReceived                    bssBANK0     0000B2
 _zb_frameToSend                      dataCOMRAM   00004F
-_zb_handle                           text4        00047A
-_zb_handle_getStatus                 text15       000B38
-_zb_handle_resetStatus               text14       000B08
-_zb_handle_sendData                  text10       0006B4
-_zb_handle_setHumidityRaw            text9        000AFA
-_zb_handle_setTempRaw                text8        000AEC
-_zb_handle_setbatVolt                text27       000B16
-_zb_handle_waitAck                   text3        000916
+_zb_handle                           text4        000482
+_zb_handle_getStatus                 text15       000B40
+_zb_handle_resetStatus               text14       000B10
+_zb_handle_sendData                  text10       0006BC
+_zb_handle_setHumidityRaw            text9        000B02
+_zb_handle_setTempRaw                text8        000AF4
+_zb_handle_setbatVolt                text27       000B1E
+_zb_handle_waitAck                   text3        00091E
 _zb_state                            bssCOMRAM    00004C
 _zb_status                           bssCOMRAM    00004D
-_zigbee_appendChecksum               text11       0007A0
+_zigbee_appendChecksum               text11       0007A8
 calibration@tryCounter               cstackCOMRAM 000014
 calibration@w                        cstackCOMRAM 000015
-end_of_initialization                cinit        0008CE
+end_of_initialization                cinit        0008D6
 hyt221_getHumidity@humidity_raw      cstackCOMRAM 000013
 hyt221_getTemp@temp_raw              cstackCOMRAM 000015
 hyt221_operation@bDeviceDataAreStale cstackCOMRAM 000013
 hyt221_operation@index               cstackCOMRAM 000014
-int_func                             intcode_body 00033C
+int_func                             intcode_body 000344
 intlevel0                            text         000000
 intlevel1                            text         000000
 intlevel2                            text         000000
@@ -640,7 +640,7 @@ main_loop@zb_status                  cstackBANK0  0000E6
 stackhi                              (abs)        0002FF
 stacklo                              (abs)        0000E9
 start                                init         000018
-start_initialization                 cinit        000896
+start_initialization                 cinit        00089E
 uart_read@b                          cstackCOMRAM 000014
 uart_read@buffer                     cstackCOMRAM 000011
 uart_read@expectedNbRead             cstackCOMRAM 000016
@@ -1523,7 +1523,7 @@ Total ram usage:        4 bytes
 
  *************** function _batt_launch_acq *****************
  Defined at:
-		line 234 in file "main.c"
+		line 235 in file "main.c"
  Parameters:    Size  Location     Type
 		None
  Auto vars:     Size  Location     Type
@@ -1710,79 +1710,79 @@ MODULE INFORMATION
 
 Module		Function		Class		Link	Load	Size
 zb.c
-		_zb_doChecksum 		CODE           	09B0	0000	42
+		_zb_doChecksum 		CODE           	09B8	0000	42
 		_zb_decodage   		CODE           	001C	0000	440
 
 zb.c estimated size: 482
 
 uart.c
-		_uart_write    		CODE           	08D8	0000	62
-		_uart_read     		CODE           	0740	0000	96
-		_uart_setup    		CODE           	0A68	0000	30
+		_uart_write    		CODE           	08E0	0000	62
+		_uart_read     		CODE           	0748	0000	96
+		_uart_setup    		CODE           	0A70	0000	30
 
 uart.c estimated size: 188
 
 timer.c
-		_timer0_wait_65		CODE           	0A46	0000	34
-		_timer0_wait_26		CODE           	0A24	0000	34
-		_timer0_wait_re		CODE           	0AB8	0000	18
+		_timer0_wait_65		CODE           	0A4E	0000	34
+		_timer0_wait_26		CODE           	0A2C	0000	34
+		_timer0_wait_re		CODE           	0AC0	0000	18
 
 timer.c estimated size: 86
 
 i2c.c
-		_i2c_setup     		CODE           	0952	0000	48
-		_i2c_wait_ready		CODE           	0ACA	0000	18
-		_i2c_trig_stop 		CODE           	0B30	0000	8
-		_i2c_trig_start		CODE           	0B24	0000	12
-		_i2c_wait_idle 		CODE           	0ADC	0000	16
+		_i2c_setup     		CODE           	095A	0000	48
+		_i2c_wait_ready		CODE           	0AD2	0000	18
+		_i2c_trig_stop 		CODE           	0B38	0000	8
+		_i2c_trig_start		CODE           	0B2C	0000	12
+		_i2c_wait_idle 		CODE           	0AE4	0000	16
 
 i2c.c estimated size: 102
 
 hyt221.c
-		_hyt221_operati		CODE           	0620	0000	148
-		_hyt221_launch_		CODE           	09DA	0000	40
-		_hyt221_getTemp		CODE           	0982	0000	46
-		_hyt221_getHumi		CODE           	0AA4	0000	20
+		_hyt221_operati		CODE           	0628	0000	148
+		_hyt221_launch_		CODE           	09E2	0000	40
+		_hyt221_getTemp		CODE           	098A	0000	46
+		_hyt221_getHumi		CODE           	0AAC	0000	20
 
 hyt221.c estimated size: 254
 
 zb_handle.c
-		_zb_handle_rese		CODE           	0B08	0000	14
-		_zigbee_appendC		CODE           	07A0	0000	90
-		_zb_handle_send		CODE           	06B4	0000	140
-		_zb_handle_setT		CODE           	0AEC	0000	14
-		_zb_handle_setH		CODE           	0AFA	0000	14
-		_zb_handle_getS		CODE           	0B38	0000	4
-		_zb_handle     		CODE           	047A	0000	224
-		_zb_handle_setb		CODE           	0B16	0000	14
-		_zb_handle_wait		CODE           	0916	0000	60
+		_zb_handle_rese		CODE           	0B10	0000	14
+		_zigbee_appendC		CODE           	07A8	0000	90
+		_zb_handle_send		CODE           	06BC	0000	140
+		_zb_handle_setT		CODE           	0AF4	0000	14
+		_zb_handle_setH		CODE           	0B02	0000	14
+		_zb_handle_getS		CODE           	0B40	0000	4
+		_zb_handle     		CODE           	0482	0000	224
+		_zb_handle_setb		CODE           	0B1E	0000	14
+		_zb_handle_wait		CODE           	091E	0000	60
 
 zb_handle.c estimated size: 574
 
 interrupt.c
-		_isr_hi        		CODE           	0008	0000	1138
+		_isr_hi        		CODE           	0008	0000	1146
 
-interrupt.c estimated size: 1138
+interrupt.c estimated size: 1146
 
 shared
-		__initializatio		CODE           	0896	0000	56
+		__initializatio		CODE           	089E	0000	56
 
 shared estimated size: 56
 
 leds.c
-		_leds_glitch   		CODE           	0A86	0000	30
+		_leds_glitch   		CODE           	0A8E	0000	30
 
 leds.c estimated size: 30
 
 main.c
-		_main_loop     		CODE           	01D4	0000	360
-		_main          		CODE           	07FA	0000	84
-		_batt_launch_ac		CODE           	084E	0000	72
+		_main_loop     		CODE           	01D4	0000	368
+		_main          		CODE           	0802	0000	84
+		_batt_launch_ac		CODE           	0856	0000	72
 
-main.c estimated size: 516
+main.c estimated size: 524
 
 osc.c
-		_calibration   		CODE           	055A	0000	198
+		_calibration   		CODE           	0562	0000	198
 
 osc.c estimated size: 198
 

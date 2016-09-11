@@ -97,7 +97,7 @@ static void main_loop()
   zb_state = NOT_JOINED;
   main_state = LAUNCH_ACQ;
 
-  leds_glitch(LED_RED);
+  leds_glitch(LED_GREEN);
 
   while (1)
   {
@@ -197,6 +197,7 @@ static void main_loop()
               XBEE_RESET_ON();
               NOP();
               XBEE_RESET_OFF();
+              main_state = LAUNCH_ACQ;
               //for(uint8_t i = 0; i < 50; i++)
               //    timer0_wait_262ms();
             }
