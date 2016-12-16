@@ -25,10 +25,10 @@ void uart_setup()
 }
 
 
-void uart_write(uint8_t size, uint8_t* buffer)
+void uart_write(uint8_t size, const uint8_t* buffer)
 {
   uint8_t i;
-  uint8_t* b;
+  const uint8_t* b;
 
   b = buffer;
   for (i = 0; i < size; i++)
@@ -77,3 +77,9 @@ BOOL uart_read(uint8_t* buffer, uint8_t nbToRead)
 }
 
 
+void uart_clean(void)
+{
+  UART_rxBufferNb = 0;
+  UART_readIndex = 0;
+  UART_writeIndex = 0;
+}

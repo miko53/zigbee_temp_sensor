@@ -10,8 +10,8 @@
 #include "osc.h"
 #include "timer.h"
 
-#define     BATT_COUNTER_MAX      (60) //number of deep sleep around 1hour
-#define     ZB_JOINED_COUNTER_MAX (50) //around 26s
+#define     BATT_COUNTER_MAX      (4*(60)) //number of deep sleep around 4hour
+#define     ZB_JOINED_COUNTER_MAX (100) //around 52s
 
 typedef enum
 {
@@ -84,6 +84,7 @@ int main(void)
   XBEE_RESET_OFF();
 
   main_loop();
+  return 0;
 }
 
 static void main_loop()
@@ -109,7 +110,7 @@ static void main_loop()
         zb_state = NOT_JOINED;
         main_state = LAUNCH_ACQ;
         XBEE_WAKE_UP(); //just in case receiving NOT_JOINED but go to sleep, must be not occurs...
-        leds_glitch(LED_YELLOW);
+        //leds_glitch(LED_YELLOW);
         timer0_wait_262ms();
         timer0_wait_262ms();
         break;
@@ -120,19 +121,6 @@ static void main_loop()
 
       default:
         break;
-        /*
-        case ZB_STATUS_ACK_ERROR:
-        case ZB_STATUS_IN_ERROR:
-        default:
-        zb_state = NOT_JOINED;
-        main_state = LAUNCH_ACQ;
-        leds_red_glitch();
-        zb_handle_ackError();
-        XBEE_WAKE_UP();
-        XBEE_RESET_ON();
-        NOP();
-        XBEE_RESET_OFF();
-        break;*/
     }
 
     switch (zb_state)
@@ -184,23 +172,16 @@ static void main_loop()
             zb_handle_setTempRaw(hyt221_getTemp());
             zb_handle_setHumidityRaw(hyt221_getHumidity());
             zb_handle_sendData();
-
-            BOOL bAckReceived;
-            bAckReceived = zb_handle_waitAck();
-            if (bAckReceived == TRUE)
+            //BOOL bAckReceived;
+            /*bAckReceived = */
+            zb_handle_waitAck(); //wait around 500ms to send DATA frame
+            /*if (bAckReceived == FALSE)
             {
-              main_state = SLEEP;
-            }
-            else
-            {
-              leds_glitch(LED_YELLOW | LED_GREEN);
-              XBEE_RESET_ON();
-              NOP();
-              XBEE_RESET_OFF();
-              main_state = LAUNCH_ACQ;
-              //for(uint8_t i = 0; i < 50; i++)
-              //    timer0_wait_262ms();
-            }
+              //leds_glitch(LED_YELLOW | LED_GREEN);
+              zb_handle_sendDbgData();
+              timer0_wait_262ms();
+            }*/
+            main_state = SLEEP;
             break;
 
           case SLEEP:
@@ -222,10 +203,10 @@ static void main_loop()
         if (wait_join_counter >= ZB_JOINED_COUNTER_MAX)
         {
           wait_join_counter = 0;
-          leds_glitch(LED_GREEN);
-          XBEE_RESET_ON();
-          NOP();
-          XBEE_RESET_OFF();
+          XBEE_SLEEP_RQ(); //XBee sleep request
+          //sleep around 1min
+          DEEP_SLEEP();
+          //leds_glitch(LED_YELLOW|LED_RED);
         }
         break;
     }

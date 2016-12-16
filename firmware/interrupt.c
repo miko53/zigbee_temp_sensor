@@ -11,7 +11,7 @@ static int8_t ledState = 0;
 static int8_t ledYState = 0;
  */
 
-static uint8_t UART_writeIndex = 0;
+uint8_t UART_writeIndex = 0;
 //extern uint8_t nbCharRecu;
 
 void interrupt high_priority isr_hi(void)

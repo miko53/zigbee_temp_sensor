@@ -5,6 +5,7 @@
 #include "zb.h"
 #include "leds.h"
 #include "timer.h"
+#include "uart_loc.h"
 
 #define MAX_SIZE_FRAME                (50)
 
@@ -26,6 +27,11 @@
 #define OFFSET_HUMIDITY                 (26)
 #define OFFSET_VOLTAGE_STATUS           (29)
 #define OFFSET_VOLTAGE                  (30)
+
+/*const uint8_t zb_forceDisassociation[] =
+{
+  ZB_START_DELIMITER, 0x00, 0x04, ZIGBEE_API_AT_CMD, 0x00, 'F', 'R', 0x5f
+};*/
 
 static uint8_t zb_frameToSend[] =
 {
@@ -66,11 +72,50 @@ static uint8_t zb_frameToSend[] =
   0x00
 };
 
-//static uint8_t zb_frameToSend[38];
+//#define DBG_FRAME
+//#define USE_FRAME_ID
+
+#ifdef DBG_FRAME
+static uint8_t zb_dbgFrame[] =
+{
+  ZB_START_DELIMITER,
+  0, //size
+  4, //size without the checksum
+  ZIGBEE_API_TRANSMIT_REQUEST,
+  0, //frameID
+  0x00, //coordinator @1
+  0x00, //coordinator @2
+  0x00, //coordinator @3
+  0x00, //coordinator @4
+  0x00, //coordinator @5
+  0x00, //coordinator @6
+  0x00, //coordinator @7
+  0x00, //coordinator @8
+  0xFF, //coord 16bits ZIGBEE_UNKNOWN_16B_ADDR
+  0xFE, //coord 16bits ZIGBEE_UNKNOWN_16B_ADDR
+  0x00, //broadcast radius
+  0x00, //option
+  //payload
+  SENSOR_PROTOCOL_DBG_TYPE,
+  0x00,//counter
+  0x00,
+  0x00,
+  0x00,
+  //and checksum
+  0x00
+};
+#endif
+
+#ifdef USE_FRAME_ID
 static uint8_t zb_frameID = 1;
-static uint8_t zb_counter;
 static uint8_t zb_currentFrameID;
 static int8_t zb_currentAck;
+#endif /* USE_FRAME_ID */
+
+static uint8_t zb_counter;
+#ifdef DBG_FRAME
+static uint8_t zb_dbg1;
+#endif
 
 typedef struct
 {
@@ -121,6 +166,7 @@ void zb_handle_resetStatus()
 
 void zb_handle_sendData()
 {
+#ifdef USE_FRAME_ID
   zb_currentFrameID = zb_frameID;
   zb_frameID++;
   if (zb_frameID == 0)
@@ -128,8 +174,11 @@ void zb_handle_sendData()
     zb_frameID = 1;
   }
   zb_currentAck = -1;
-
   zb_frameToSend[OFFSET_FRAMEID] = zb_currentFrameID;
+#else
+  zb_frameToSend[OFFSET_FRAMEID] = 0;
+#endif /* USE_FRAME_ID */
+
   zb_frameToSend[OFFSET_COUNTER] = zb_counter++;
   zb_frameToSend[OFFSET_TEMPERATURE_STATUS]   = sensor_data.tempStatus;
   zb_frameToSend[OFFSET_TEMPERATURE]   = sensor_data.tempRaw >> 8;
@@ -149,12 +198,32 @@ void zb_handle_sendData()
   uart_write(frameSize, zb_frameToSend);
 }
 
+/*void zb_handle_force_disassociation()
+{
+  uart_write(sizeof(zb_forceDisassociation), zb_forceDisassociation);
+}*/
+
+#ifdef DBG_FRAME
+void zb_handle_sendDbgData()
+{
+  zb_dbgFrame[19] = zb_currentAck;
+  zb_dbgFrame[20] = zb_dbg1;
+  zb_dbgFrame[21] = zb_currentFrameID;
+  uint8_t frameSize = sizeof(zb_dbgFrame) - 1;
+  zb_dbgFrame[OFFSET_SIZE] = ((frameSize - ZB_HEADER_SIZE) & 0xFF00) >> 8;
+  zb_dbgFrame[OFFSET_SIZE + 1] = ((frameSize - ZB_HEADER_SIZE) & 0x00FF);
+  zigbee_appendChecksum(zb_dbgFrame, &frameSize);
+  uart_write(frameSize, zb_dbgFrame);
+  zb_dbg1 = 0;
+}
+#endif
 
 static void zigbee_appendChecksum(uint8_t* buffer, uint8_t* sizeFrame)
 {
   buffer[*sizeFrame] = zb_doChecksum(&buffer[ZB_HEADER_SIZE], &buffer[*sizeFrame] - &buffer[ZB_HEADER_SIZE]);
   (*sizeFrame)++;
 }
+
 
 void zb_handle(void)
 {
@@ -210,15 +279,21 @@ void zb_handle(void)
         else if (decodedFrame.status == 0x03)
         {
           zb_status = ZB_STATUS_NOT_JOINED;
-          leds_glitch(LED_RED | LED_YELLOW | LED_GREEN);
+          leds_glitch(LED_RED);
         }
         break;
 
       case ZIGBEE_TRANSMIT_STATUS:
+#ifdef USE_FRAME_ID
         if (zb_currentFrameID == decodedFrame.frameID)
         {
           zb_currentAck = decodedFrame.status;
         }
+        else
+        {
+          ;
+        }
+#endif /* USE_FRAME_ID */
         break;
 
       case ZIGBEE_RECEIVE_PACKET:
@@ -232,21 +307,22 @@ void zb_handle(void)
 
 BOOL zb_handle_waitAck(void)
 {
+#ifdef USE_FRAME_ID
   uint8_t retryCounter;
   BOOL bAckReceived;
 
   bAckReceived = FALSE;
   retryCounter = 0;
-
   //5
   //19 max retry = 3 --> 4.8s
-  while ((retryCounter < 19) && (bAckReceived == FALSE))
+  timer0_wait_262ms();
+
+  while ((retryCounter < 18) && (bAckReceived == FALSE))
   {
     zb_handle();
     if (zb_currentAck == 0)
     {
       bAckReceived = TRUE;
-      //      leds_green_glitch();
     }
 
     timer0_wait_262ms(); //wait end of transmission
@@ -254,4 +330,9 @@ BOOL zb_handle_waitAck(void)
   }
 
   return bAckReceived;
+#else
+  timer0_wait_262ms();
+  timer0_wait_262ms();
+  return TRUE;
+#endif
 }

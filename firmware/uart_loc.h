@@ -26,6 +26,7 @@ typedef struct
 extern UART_errorT UART_errorStatus;
 extern uint8_t UART_rxBufferNb;
 extern uint8_t UART_rxBuffer[USART_RX_BUFFER_SIZE];
+extern uint8_t UART_writeIndex;
 
 #ifdef	__cplusplus
 }
